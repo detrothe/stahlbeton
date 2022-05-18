@@ -1,0 +1,15 @@
+{
+  "background_color": "purple",
+  "description": "Der Werkzeugkasten für die Stahlbetonbauer",
+  "display": "fullscreen",
+  "icons": [
+    {
+      "src": "icon/stahlbeton.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "name": "Stahlbeton Werkzeugkasten",
+  "short_name": "stahlbetontool",
+  "start_url": "/?utm_source=homescreen"
+}

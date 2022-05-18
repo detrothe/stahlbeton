@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="de" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <title>Statik Werkzeugkasten</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <link href="./styles/main.css" rel="stylesheet" type="text/css">
+    <link href="./styles/contextMenu.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="manifest" href="/manifest.webmanifest">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+    <script type="module" src="./src/index.js"></script>
+
+</head>
+
+<body>
+
+<div class="grid-container">
+    <!--
+        <div id="rand"  class="rand" style="background-color:#D6D8D8;"></div>
+        <div id="rand1" class="rand1" style="background-color:#D6D8D8;"></div>
+    -->
+    <div class="header">
+        <div id="input-container">
+
+            <!-- <h2>Statik Werkzeugkasten</h2> -->
+            <div class="topnav" id="myTopnav">
+                <a href="javascript:tangens();">tangens</a>
+
+                <a href="javascript:kdtabelle();">Bemessung</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="topLeft" style="background-color:#D8D8D8;">
+
+
+    </div>
+
+
+    <div class="topRight" style="background-color:#D8D8D8;">
+
+
+    </div>
+
+
+    <div class="left" style="background-color:#aaa;">
+
+        <div id="tangens">
+            <p>Berechnung des Tangens</p>
+            <p>
+                Hinweis f&uuml;r Haupttr&auml;gheitsmomente:<br>
+                &nbsp;&nbsp;&nbsp;y=-2*Iyz<br>
+                &nbsp;&nbsp;&nbsp;x=Iy-Iz<br>
+                &nbsp;&nbsp;&nbsp;phi_0=alpha/2
+            </p>
+
+            <form name="tangens_2">
+
+                <table class="table_tangens">
+                    <tr>
+                        <td COLSPAN="2">
+                            <p>Eingabe:<br> alpha=arctan(y/x)</p>
+                        </td>
+                        <td></td>
+
+                    </tr>
+                    <tr>
+                        <td class="zelle100"> Gegenkathete y =</td>
+                        <td><input type="text" name="y" size="10" pattern="[0-9.,eE+-]*"></td>
+                        <td></td>
+
+                    </tr>
+                    <tr>
+                        <td class="zelle100"> Ankathete x =</td>
+                        <td><input type="text" name="x" size="10" pattern="[0-9.,eE+-]*"></td>
+                        <td></td>
+
+                    </tr>
+
+                    <tr>
+                        <td><p>Ergebnis:</p></td>
+                        <td COLSPAN="2"><input type="button" value="RECHNEN" name="B1" onClick="tan_2()"></td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            alpha =
+                        </td>
+                        <td id="alpha"></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+
+
+
+
+
+        <div id="kdTabelle">
+
+            <p>Biegebemessung eines Rechteckquerschnitts</p>
+
+            <form name="form_kdTab">
+                <table>
+                    <tbody>
+                    <tr>
+                        <td class="zelle0">N<sub>Ed</sub> =</td>
+                        <td><input type="text" id="NEd" name="NEd" class="input_kdtab" pattern="[0-9.,eE+-]*">
+                        </td>
+                        <td>[kN]</td>
+                        <td align="right">k<sub>d</sub> =</td>
+                        <td id="kd_value">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="zelle0">M<sub>Ed</sub> =</td>
+                        <td><input type="text" id="MEd" name="MEd" class="input_kdtab" pattern="[0-9.,eE+-]*"></td>
+                        <td>[kNm]</td>
+                        <td align="right">k<sub>s</sub> =</td>
+                        <td id="ks_value"></td>
+                    </tr>
+                    <tr>
+                        <td class="zelle0">Breite b =</td>
+                        <td><input type="text" id="breite" name="Breite" class="input_kdtab" pattern="[0-9.,eE+-]*">
+                        </td>
+                        <td>[cm]</td>
+                        <td align="right">k<sub>s1</sub> =</td>
+                        <td id="ks1_value"></td>
+                    </tr>
+                    <tr>
+                        <td class="zelle0">Höhe h =</td>
+                        <td><input type="text" id="hoehe" name="Hoehe" class="input_kdtab" pattern="[0-9.,eE+-]*"></td>
+                        <td>[cm]</td>
+                        <td align="right">k<sub>s2</sub> =</td>
+                        <td id="ks2_value"></td>
+                    </tr>
+                    <tr>
+                        <td class="zelle0">d<sub>2</sub>&nbsp;(oben)&nbsp;=</td>
+                        <td><input type="text" id="d2" name="d2" class="input_kdtab" pattern="[0-9.,eE+-]*"></td>
+                        <td>[cm]</td>
+                        <td align="right" title="Druckzonenhöhe">x =</td>
+                        <td id="xx_value"></td>
+                    </tr>
+                    <tr>
+                        <td class="zelle0">d<sub>1</sub>&nbsp;(unten)&nbsp;=</td>
+                        <td><input type="text" id="d1" name="d1" class="input_kdtab" pattern="[0-9.,eE+-]*"></td>
+                        <td>[cm]</td>
+                        <td align="right" title="Hebelarm der inneren Kräfte">z =</td>
+                        <td id="zz_value"></td>
+                    </tr>
+                    <tr>
+                        <td class="zelle0">Beton&nbsp;C&nbsp;=</td>
+                        <td>
+                            <select name="beton" id="beton">
+                                <option value="1">12/15</option>
+                                <option value="2">16/20</option>
+                                <option value="3">20/25</option>
+                                <option value="4" selected>25/30</option>
+                                <option value="5">30/37</option>
+                                <option value="6">35/45</option>
+                                <option value="7">40/50</option>
+                                <option value="8">45/55</option>
+                                <option value="9">50/60</option>
+                            </select>
+                        </td>
+                        <td></td>
+                        <td align="right" title="obere Betondehnung">&epsilon;<sub>c2</sub> =</td>
+                        <td id="eps_c2_value"></td>
+
+                    </tr>
+                    <tr>
+                        <td class="zelle0" title="bezogene Druckzonenhöhe für Druckbewehrung">&xi; =</td>
+                        <td>
+                            <select name="ksi" id="ksi_option">
+                                <option value="0">0,25</option>
+                                <option value="1">0,45</option>
+                                <option value="2" selected>0,617</option>
+                            </select>
+                        </td>
+                        <td></td>
+                        <td align="right" title="untere Stahldehnung">&epsilon;<sub>s1</sub> =</td>
+                        <td id="eps_s1_value"></td>
+
+                    </tr>
+                    <tr>
+                        <td class="zelle0"></td>
+                        <td>                        </td>
+                        <td></td>
+                        <td align="right" title="obere Bewehrung">A<sub>s2</sub> =</td>
+                        <td id="As2_value"></td>
+
+                    </tr>
+                    <tr>
+                        <td class="zelle0"></td>
+                        <td colspan="2" align="left"><input type="button" value="RECHNEN" name="B3"
+                                                             onClick="calc_kdtab()"></td>
+                        <td align="right" title="untere Bewehrung">A<sub>s1</sub> =</td>
+                        <td id="As1_value"></td>
+
+                    </tr>
+
+
+
+                    </tbody>
+                </table>
+            </form>
+        </div>
+
+
+
+    </div>
+
+
+    <div class="middle" style="background-color:#bbb;">
+
+
+    </div>
+
+
+    <div class="right" style="background-color:#ccc;">
+
+    </div>
+
+    <div class="footer">
+        <p>Stahlbeton Werkzeugkasten, 18-Mai-2022, statikverstehen.de</p>
+    </div>
+
+
+</div>
+
+<nav id="context-menu" class="context-menu">
+    <ul class="context-menu__items">
+        <li class="context-menu__item">
+            <a href="#" class="context-menu__link" data-action="copyFirst"><i class="fa fa-clone"></i> copy first
+                cell
+                value</a>
+        </li>
+        <li class="context-menu__item">
+            <a href="#" class="context-menu__link" data-action="increment_1"><i class="fa fa-plus-square-o"></i>
+                increment by
+                1</a>
+        </li>
+        <li class="context-menu__item">
+            <a href="#" class="context-menu__link" data-action="copy"><i class="fa fa-clipboard"></i> copy to clipboard</a>
+        </li>
+        <li class="context-menu__item">
+            <a href="#" class="context-menu__link" data-action="insert"><i class="fa fa-clipboard"></i> insert from
+                clipboard</a>
+        </li>
+    </ul>
+</nav>
+
+
+</body>
+
+</html>
