@@ -1,5 +1,5 @@
 
-import {set_nnodes,set_nelem} from "./duennQ.js"
+import {set_nnodes,set_nelem} from "./duennQ"
 import {resize_Tabelle} from "./base_tabelle";
 
 
