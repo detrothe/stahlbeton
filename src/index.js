@@ -6,7 +6,8 @@ import {testeZahl, SDuennTruss, sichtbar} from "./utility.js";
 
 import DetectOS from './detectos.js'
 import {init_contextmenu} from './contextMenu.js';
-import {add2Numbers} from "./add2Numbers";
+//import {add2Numbers} from "./add2Numbers";
+import {duennQuer} from "./duennQ";
 
 //import {TFVector} from "./TFArray";
 
@@ -119,9 +120,12 @@ console.log("as",as[0],as[1],as[2]);
 */
 
 
-let stab = new SDuennTruss();
+//let stab = new SDuennTruss();
 
-stab.Iy = 10.0
-console.log("stab", stab.Iy);
+//stab.Iy = 10.0
+//stab.r[0] = 2.2
+//console.log("stab", stab.Iy, stab.r[0], stab.r[1]);
 
-console.log("add2", add2Numbers(2,"dr"));
+//console.log("add2", add2Numbers(2,3));
+
+//duennQ();

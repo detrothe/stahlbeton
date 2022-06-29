@@ -32,6 +32,7 @@ export function testNumber(wert, zeile, spalte, id) {
 export function SDuennTruss() {
     this.emodul = null
     this.Iy = null
+    this.r = [1,1]
 }
 
 export function sichtbar(displayName) {
@@ -46,6 +47,19 @@ export function sichtbar(displayName) {
         document.getElementById("kdTabelle").style.display = "block";
     } else {
         document.getElementById("kdTabelle").style.display = "none";
+    }
+    if (displayName === 'duennQ') {
+        document.getElementById("knotentabelle").style.display = "block";
+        document.getElementById("elementtabelle").style.display = "block";
+        //document.getElementById("Loesungsvektor").style.display = "block";
+        document.getElementById("eingabe_duennQ_top").style.display = "block";
+        document.getElementById("duennQ_save_daten").style.display = "block";
+    } else {
+        document.getElementById("knotentabelle").style.display = "none";
+        document.getElementById("elementtabelle").style.display = "none";
+        //document.getElementById("Loesungsvektor").style.display = "none";
+        document.getElementById("eingabe_duennQ_top").style.display = "none";
+        document.getElementById("duennQ_save_daten").style.display = "none";
     }
 }
 

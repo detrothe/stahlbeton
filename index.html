@@ -35,6 +35,7 @@
                 <a href="javascript:tangens();">tangens</a>
 
                 <a href="javascript:kdtabelle();">Bemessung</a>
+                <a href="javascript:duennQuer();">dünnQuer</a>
             </div>
         </div>
     </div>
@@ -42,12 +43,137 @@
 
     <div class="topLeft" style="background-color:#D8D8D8;">
 
+        <div id="eingabe_duennQ_top">
+
+            <p>Querschnittswerte und Spannungen dünnwandiger Querschnitte</p>
+            <p>
+                <label>Anzahl Knoten :</label>
+                <input type="number" id="input_nodes" name="nnodes" class="input_int" value="4" width="10px">
+                <label>Anzahl Elemente :</label>
+                <input type="number" id="input_nelem" name="nelem" class="input_int" value="3">
+                <br>
+            </p>
+
+            <table>
+                <tbody>
+                <tr>
+                    <td>
+                        <button type="button" class="buttonTable" id="resize">resize Tabellen</button>
+                    </td>
+                    <td>
+                        <button type="button" class="buttonTable" id="clearTable">clear Tabellen</button>
+                    </td>
+                    <td>
+                        <button type="button" class="buttonTable" id="rechnen">Rechnen</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <p><b>Schnittgrößen</b></p>
+
+            <table>
+                <tbody>
+                <tr>
+                    <td class="zelle0">V<sub>y</sub> =</td>
+                    <td><input type="text" id="Vy" name="Vy" class="input_kdtab" pattern="[0-9.,eE+-]*"></td>
+                    <td>[kN]</td>
+                    <td align="right">M<sub>xp</sub> =</td>
+                    <td><input type="text" id="Mxp" name="Mxp" class="input_kdtab" pattern="[0-9.,eE+-]*">
+                    </td>
+                    <td>[kNcm]</td>
+                    <td align="right">N =</td>
+                    <td><input type="text" id="Nx" name="Nx" class="input_kdtab" pattern="[0-9.,eE+-]*">
+                    </td>
+                    <td>[kN]</td>
+                </tr>
+                <tr>
+                    <td class="zelle0">V<sub>z</sub> =</td>
+                    <td><input type="text" id="Vz" name="Vz" class="input_kdtab" pattern="[0-9.,eE+-]*"></td>
+                    <td>[kN]</td>
+                    <td align="right">M<sub>xs</sub> =</td>
+                    <td><input type="text" id="Mxs" name="Mxs" class="input_kdtab" pattern="[0-9.,eE+-]*">
+                    </td>
+                    <td>[kNcm]</td>
+                    <td align="right">M<sub>y</sub> =</td>
+                    <td><input type="text" id="My" name="My" class="input_kdtab" pattern="[0-9.,eE+-]*">
+                    </td>
+                    <td>[kNcm]</td>
+                </tr>
+                <tr>
+                    <td class="zelle0"></td>
+                    <td></td>
+                    <td></td>
+                    <td align="right">M<sub>&omega;</sub> =</td>
+                    <td><input type="text" id="Momega" name="Momega" class="input_kdtab" pattern="[0-9.,eE+-]*">
+                    </td>
+                    <td>[kNcm²]</td>
+                    <td align="right">M<sub>z</sub> =</td>
+                    <td><input type="text" id="Mz" name="Mz" class="input_kdtab" pattern="[0-9.,eE+-]*">
+                    </td>
+                    <td>[kNcm]</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <p><b>Bezugswerte</b></p>
+
+            <form name="form_bezugswerte">
+                <table>
+                    <tbody>
+                    <tr>
+                        <td class="zelle0">E-Modul =</td>
+                        <td><input type="text" id="EMod_ref" name="EMod_ref" value="21000" class="input_kdtab"
+                                   pattern="[0-9.,eE+-]*"></td>
+                        <td>[kN/cm²]</td>
+                        <td align="right" title="Querdehnzahl">&nu; =</td>
+                        <td><input type="text" id="mue_ref" name="mue_ref" value="0.3" class="input_kdtab"
+                                   pattern="[0-9.,eE+-]*"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+
+
+            <p><b>Vergleichsspannung</b></p>
+            <table>
+                <tbody>
+                <tr>
+                    <td class="zelle0">f<sub>y,Rd</sub> =</td>
+                    <td><input type="text" id="fyRd" name="fyRd" value="23.5" class="input_kdtab"
+                               pattern="[0-9.,eE+-]*"></td>
+                    <td>[kN/cm²]</td>
+                </tbody>
+            </table>
+
+        </div>
+
+
+        <div id="knotentabelle">
+            <div id="matrix_knoten">
+                <p>Knoten </p>
+            </div>
+        </div>
+
+        <div id="elementtabelle">
+            <div id="matrix_elemente">
+                <p>Elemente </p>
+            </div>
+        </div>
 
     </div>
 
 
     <div class="topRight" style="background-color:#D8D8D8;">
 
+        <div id="duennQ_save_daten">
+            <p>
+                <button type="button" id="readFile">Daten einlesen</button>
+
+                <button type="button" id="saveFile">Daten speichern</button>
+            </p>
+
+        </div>
 
     </div>
 
@@ -99,9 +225,6 @@
                 </table>
             </form>
         </div>
-
-
-
 
 
         <div id="kdTabelle">
@@ -191,7 +314,7 @@
                     </tr>
                     <tr>
                         <td class="zelle0"></td>
-                        <td>                        </td>
+                        <td></td>
                         <td></td>
                         <td align="right" title="obere Bewehrung">A<sub>s2</sub> =</td>
                         <td id="As2_value"></td>
@@ -200,19 +323,17 @@
                     <tr>
                         <td class="zelle0"></td>
                         <td colspan="2" align="left"><input type="button" value="RECHNEN" name="B3"
-                                                             onClick="calc_kdtab()"></td>
+                                                            onClick="calc_kdtab()"></td>
                         <td align="right" title="untere Bewehrung">A<sub>s1</sub> =</td>
                         <td id="As1_value"></td>
 
                     </tr>
 
 
-
                     </tbody>
                 </table>
             </form>
         </div>
-
 
 
     </div>
@@ -229,7 +350,7 @@
     </div>
 
     <div class="footer">
-        <p>Stahlbeton Werkzeugkasten, 21-Juni-2022, statikverstehen.de</p>
+        <p>Stahlbeton Werkzeugkasten, 23-Juni-2022, statikverstehen.de</p>
     </div>
 
 
