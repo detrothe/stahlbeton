@@ -304,7 +304,7 @@ input:valid {
 }
 
 .input_kdtab {
-    width: 80px;
+    width: 90px;
 }
 
 .input_wind {
@@ -420,11 +420,12 @@ td.selected {
 }
 
 .table_eng th, td {
-    border: 1px solid black;
-    border-collapse: collapse;
+    border: none; /*1px solid black*/
+    /*border-collapse: collapse;*/
     padding: 1px;
+    width: 90px;
 }
 .td_eng {
-    /*padding: 1px;*/
+    padding: 1px;
 
 }
