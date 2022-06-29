@@ -418,3 +418,13 @@ td.selected {
     background-color: orange;
     border: 0;
 }
+
+.table_eng th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 1px;
+}
+.td_eng {
+    /*padding: 1px;*/
+
+}
