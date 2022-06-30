@@ -56,8 +56,8 @@ export function tabulate(theDiv, id, data, columns) {
     const cells = rows.selectAll('td')
         .data(function (row) {
             return columns.map(function (column,spalte) {
-                //console.log("function (column)",spalte,column,row[column]);
-                if ( column === 'No') {
+                console.log("function (column)", spalte,column,row[column]);
+                if ( spalte === 0) {
                     return {column: column, value: zeile++};
                 } else {
                     return {column: column, value: ""};  // row[column]

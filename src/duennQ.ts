@@ -128,7 +128,7 @@ const yy = [0.0, 0.0, 0.0, 40.0];
 // @ts-ignore
 tabulate('#knotentabelle', 'nodeTable', nodeObj.nodeArray, ['No', 'y [cm]', 'z [cm]']);
 // @ts-ignore
-tabulate('#elementtabelle', 'elemTable', elemObj.elemArray, ['No', 'E-Modul [kN/cm²]', 'ν', 'Dicke t [cm]', 'nod1', 'nod2']);
+tabulate('#elementtabelle', 'elemTable', elemObj.elemArray, ["El No", 'E-Modul [kN/cm²]', 'ν', 'Dicke t [cm]', 'nod1', 'nod2']);
 
 
 const nTabelle = document.getElementById("nodeTable") as HTMLTableElement;
@@ -712,7 +712,7 @@ export function duennQ() {
                 sigma = truss[i].ni * (normalkraft / Gesamtflaeche + moment_1 / I11 * zj - moment_2 / I22 * yj)
             }
             //Sheets("Eingabe").Cells(20 + i, 21 + j) = sigma
-            if (j === 1) {
+            if (j === 0) {
                 truss[i].sigma_x[0] = sigma
             } else {
                 truss[i].sigma_x[2] = sigma
@@ -769,36 +769,175 @@ export function duennQ() {
     document.getElementById("i_M2").innerText = iM2.toFixed(2);
     document.getElementById("i_p2").innerText = iP2.toFixed(2);
 
-    /*
-        let myTableDiv = document.getElementById("querschnittswerte");  //in div
+
+    // Altes löschen
+
+    let elem = document.getElementById('id_spannung_mxp');
+    if (elem !== null) elem.parentNode.removeChild(elem);
+    elem = document.getElementById('id_spannung_mxs');
+    if (elem !== null) elem.parentNode.removeChild(elem);
+    elem = document.getElementById('id_normalspannung');
+    if (elem !== null) elem.parentNode.removeChild(elem);
+    elem = document.getElementById('id_table_spannung_mxp');
+    if (elem !== null) elem.parentNode.removeChild(elem);
+    elem = document.getElementById('id_table_spannung_mxs');
+    if (elem !== null) elem.parentNode.removeChild(elem);
+    elem = document.getElementById('id_table_normalspannung');
+    if (elem !== null) elem.parentNode.removeChild(elem);
+
+    // Spannungen aus primärer Torsion
+
+    let myTableDiv = document.getElementById("spannung_mxp");  //in div
 
 
-        let tag = document.createElement("p"); // <p></p>
-        tag.setAttribute("id", "id_querschnitt");
-        let text = document.createTextNode("xxx");
-        tag.appendChild(text);
-        tag.innerHTML = "ideelle Querschnittswerte"
-        myTableDiv.appendChild(tag);
+    let tag = document.createElement("p"); // <p></p>
+    tag.setAttribute("id", "id_spannung_mxp");
+    let text = document.createTextNode("xxx");
+    tag.appendChild(text);
+    tag.innerHTML = "Alle Spannungen in kN/cm²<br><br>Spannungen aus primärer Torsion M<sub>xp</sub>"
+    myTableDiv.appendChild(tag);
 
-        let table = document.createElement("TABLE") as HTMLTableElement;   //TABLE??
-        table.setAttribute("id", "id_table_querschnittswerte");
-        table.border = '0';
-        myTableDiv.appendChild(table);  //appendChild() insert it in the document (table --> myTableDiv)
+    let table = document.createElement("TABLE") as HTMLTableElement;   //TABLE??
+    table.setAttribute("id", "id_table_spannung_mxp");
+    table.border = '0';
+    myTableDiv.appendChild(table);  //appendChild() insert it in the document (table --> myTableDiv)
+
+
+    table.createTHead();
+
+    let th0 = table.tHead.appendChild(document.createElement("th"));
+    th0.innerHTML = "El No";
+    th0.setAttribute("class", "table_spannung_cell_center");
+    let th1 = table.tHead.appendChild(document.createElement("th"));
+    th1.innerHTML = "&tau;<sub>xs0,R</sub>";
+    let th2 = table.tHead.appendChild(document.createElement("th"));
+    th2.innerHTML = "&tau;<sub>xs0,L</sub>";
+    let th3 = table.tHead.appendChild(document.createElement("th"));
+    th3.innerHTML = "&tau;<sub>xs1</sub>";
+
+    for (i = 0; i < nelem; i++) {
 
         let newRow = table.insertRow(-1);
         let newCell, newText
         newCell = newRow.insertCell(0);  // Insert a cell in the row at index 0
 
-        newText = document.createTextNode('ys =');  // Append a text node to the cell
+        newText = document.createTextNode(String(i + 1));  // Append a text node to the cell
         newCell.appendChild(newText);
-        newCell.innerHTML = 'y<sub>s</sub> ='
+        newCell.setAttribute("class", "table_spannung_cell_center");
 
         newCell = newRow.insertCell(1);  // Insert a cell in the row at index 1
-        newText = document.createTextNode(ys.toFixed(2));  // Append a text node to the cell
+        newText = document.createTextNode(truss[i].tau_p0R[0].toFixed(2));  // Append a text node to the cell
         newCell.appendChild(newText);
 
         newCell = newRow.insertCell(2);  // Insert a cell in the row at index 1
-        newText = document.createTextNode('cm');  // Append a text node to the cell
+        newText = document.createTextNode(truss[i].tau_p0L[0].toFixed(2));  // Append a text node to the cell
         newCell.appendChild(newText);
-    */
+
+        newCell = newRow.insertCell(3);  // Insert a cell in the row at index 1
+        newText = document.createTextNode(truss[i].tau_p1[0].toFixed(2));  // Append a text node to the cell
+        newCell.appendChild(newText);
+    }
+
+    // Spannungen aus Querkraft und sekundärer Torsion
+
+    myTableDiv = document.getElementById("spannung_mxs");  //in div
+
+
+    tag = document.createElement("p"); // <p></p>
+    tag.setAttribute("id", "id_spannung_mxs");
+    text = document.createTextNode("xxx");
+    tag.appendChild(text);
+    tag.innerHTML = "Spannungen aus Querkraft und sekundärer Torsion M<sub>xs</sub>"
+    myTableDiv.appendChild(tag);
+
+    table = document.createElement("TABLE") as HTMLTableElement;   //TABLE??
+    table.setAttribute("id", "id_table_spannung_mxs");
+    table.border = '0';
+    myTableDiv.appendChild(table);  //appendChild() insert it in the document (table --> myTableDiv)
+
+
+    table.createTHead();
+
+    th0 = table.tHead.appendChild(document.createElement("th"));
+    th0.innerHTML = "El No";
+    th0.setAttribute("class", "table_spannung_cell_center");
+    th1 = table.tHead.appendChild(document.createElement("th"));
+    th1.innerHTML = "&tau;<sub>xs1</sub>";
+    th2 = table.tHead.appendChild(document.createElement("th"));
+    th2.innerHTML = "&tau;<sub>xsm</sub>";
+    th3 = table.tHead.appendChild(document.createElement("th"));
+    th3.innerHTML = "&tau;<sub>xs2</sub>";
+
+    for (i = 0; i < nelem; i++) {
+
+        let newRow = table.insertRow(-1);
+        let newCell, newText
+        newCell = newRow.insertCell(0);  // Insert a cell in the row at index 0
+
+        newText = document.createTextNode(String(i + 1));  // Append a text node to the cell
+        newCell.appendChild(newText);
+        newCell.setAttribute("class", "table_spannung_cell_center");
+
+        newCell = newRow.insertCell(1);  // Insert a cell in the row at index 1
+        newText = document.createTextNode(truss[i].tau_s[0].toFixed(2));  // Append a text node to the cell
+        newCell.appendChild(newText);
+
+        newCell = newRow.insertCell(2);  // Insert a cell in the row at index 1
+        newText = document.createTextNode(truss[i].tau_s[1].toFixed(2));  // Append a text node to the cell
+        newCell.appendChild(newText);
+
+        newCell = newRow.insertCell(3);  // Insert a cell in the row at index 1
+        newText = document.createTextNode(truss[i].tau_s[2].toFixed(2));  // Append a text node to the cell
+        newCell.appendChild(newText);
+    }
+
+
+    // Spannungen aus Normalkraft, Biegemoment und Wölbbimoment
+
+    myTableDiv = document.getElementById("normalspannung");  //in div
+
+
+    tag = document.createElement("p"); // <p></p>
+    tag.setAttribute("id", "id_normalspannung");
+    text = document.createTextNode("xxx");
+    tag.appendChild(text);
+    tag.innerHTML = "Spannungen aus Normalkraft, Biegemoment und Wölbbimoment"
+    myTableDiv.appendChild(tag);
+
+    table = document.createElement("TABLE") as HTMLTableElement;   //TABLE??
+    table.setAttribute("id", "id_table_normalspannung");
+    table.border = '0';
+    myTableDiv.appendChild(table);  //appendChild() insert it in the document (table --> myTableDiv)
+
+
+    table.createTHead();
+
+    th0 = table.tHead.appendChild(document.createElement("th"));
+    th0.innerHTML = "El No";
+    th0.setAttribute("class", "table_spannung_cell_center");
+    th1 = table.tHead.appendChild(document.createElement("th"));
+    th1.innerHTML = "&sigma;<sub>x1</sub>";
+    th2 = table.tHead.appendChild(document.createElement("th"));
+    th2.innerHTML = "&sigma;<sub>x2</sub>";
+
+    for (i = 0; i < nelem; i++) {
+
+        let newRow = table.insertRow(-1);
+        let newCell, newText
+        newCell = newRow.insertCell(0);  // Insert a cell in the row at index 0
+
+        newText = document.createTextNode(String(i + 1));  // Append a text node to the cell
+        newCell.appendChild(newText);
+        newCell.setAttribute("class", "table_spannung_cell_center");
+
+        newCell = newRow.insertCell(1);  // Insert a cell in the row at index 1
+        newText = document.createTextNode(truss[i].sigma_x[0].toFixed(3));  // Append a text node to the cell
+        newCell.appendChild(newText);
+
+        newCell = newRow.insertCell(2);  // Insert a cell in the row at index 1
+        newText = document.createTextNode(truss[i].sigma_x[2].toFixed(3));  // Append a text node to the cell
+        newCell.appendChild(newText);
+
+    }
+
 }

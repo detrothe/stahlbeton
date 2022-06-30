@@ -439,3 +439,9 @@ td.selected {
 .querschnittwerte_table_z0 {
     text-align: right;
 }
+#spannung_mxp, #spannung_mxs, #normalspannung {
+    display: none;
+}
+.table_spannung_cell_center {
+    text-align: center;
+}

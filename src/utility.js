@@ -54,12 +54,18 @@ export function sichtbar(displayName) {
         document.getElementById("querschnittswerte").style.display = "block";
         document.getElementById("eingabe_duennQ_top").style.display = "block";
         document.getElementById("duennQ_save_daten").style.display = "block";
+        document.getElementById("spannung_mxp").style.display = "block";
+        document.getElementById("spannung_mxs").style.display = "block";
+        document.getElementById("normalspannung").style.display = "block";
     } else {
         document.getElementById("knotentabelle").style.display = "none";
         document.getElementById("elementtabelle").style.display = "none";
         document.getElementById("querschnittswerte").style.display = "none";
         document.getElementById("eingabe_duennQ_top").style.display = "none";
         document.getElementById("duennQ_save_daten").style.display = "none";
+        document.getElementById("spannung_mxp").style.display = "none";
+        document.getElementById("spannung_mxs").style.display = "none";
+        document.getElementById("normalspannung").style.display = "none";
     }
 }
 
