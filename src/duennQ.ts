@@ -744,4 +744,61 @@ export function duennQ() {
         }
     }
 
+    document.getElementById("ys").innerText = Gesamt_ys.toFixed(2);
+    document.getElementById("zs").innerText = Gesamt_zs.toFixed(2);
+    document.getElementById("area").innerText = Gesamtflaeche.toFixed(2);
+    document.getElementById("Iys").innerText = Gesamt_Iyy.toFixed(2);
+    document.getElementById("Izs").innerText = Gesamt_Izz.toFixed(2);
+    document.getElementById("Iyzs").innerText = Gesamt_Iyz.toFixed(2);
+    document.getElementById("I11").innerText = I11.toFixed(2);
+    document.getElementById("I22").innerText = I22.toFixed(2);
+    document.getElementById("phi_h").innerText = (phi0 * 180.0 / Math.PI).toFixed(2);
+
+    document.getElementById("yM").innerText = yM.toFixed(2);
+    document.getElementById("zM").innerText = zM.toFixed(2);
+    document.getElementById("I_t").innerText = Gesamt_It.toFixed(2);
+    document.getElementById("I_omega").innerText = I_omega.toFixed(2);
+
+    document.getElementById("r_1").innerText = ry.toFixed(2);
+    document.getElementById("r_2").innerText = rz.toFixed(2);
+    if (I_omega > 0.0000000000001) {
+        document.getElementById("r_omega").innerText = rOmega.toFixed(2);
+    } else {
+        document.getElementById("r_omega").innerText = "-";
+    }
+    document.getElementById("i_M2").innerText = iM2.toFixed(2);
+    document.getElementById("i_p2").innerText = iP2.toFixed(2);
+
+    /*
+        let myTableDiv = document.getElementById("querschnittswerte");  //in div
+
+
+        let tag = document.createElement("p"); // <p></p>
+        tag.setAttribute("id", "id_querschnitt");
+        let text = document.createTextNode("xxx");
+        tag.appendChild(text);
+        tag.innerHTML = "ideelle Querschnittswerte"
+        myTableDiv.appendChild(tag);
+
+        let table = document.createElement("TABLE") as HTMLTableElement;   //TABLE??
+        table.setAttribute("id", "id_table_querschnittswerte");
+        table.border = '0';
+        myTableDiv.appendChild(table);  //appendChild() insert it in the document (table --> myTableDiv)
+
+        let newRow = table.insertRow(-1);
+        let newCell, newText
+        newCell = newRow.insertCell(0);  // Insert a cell in the row at index 0
+
+        newText = document.createTextNode('ys =');  // Append a text node to the cell
+        newCell.appendChild(newText);
+        newCell.innerHTML = 'y<sub>s</sub> ='
+
+        newCell = newRow.insertCell(1);  // Insert a cell in the row at index 1
+        newText = document.createTextNode(ys.toFixed(2));  // Append a text node to the cell
+        newCell.appendChild(newText);
+
+        newCell = newRow.insertCell(2);  // Insert a cell in the row at index 1
+        newText = document.createTextNode('cm');  // Append a text node to the cell
+        newCell.appendChild(newText);
+    */
 }

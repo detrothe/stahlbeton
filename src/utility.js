@@ -51,13 +51,13 @@ export function sichtbar(displayName) {
     if (displayName === 'duennQ') {
         document.getElementById("knotentabelle").style.display = "block";
         document.getElementById("elementtabelle").style.display = "block";
-        //document.getElementById("Loesungsvektor").style.display = "block";
+        document.getElementById("querschnittswerte").style.display = "block";
         document.getElementById("eingabe_duennQ_top").style.display = "block";
         document.getElementById("duennQ_save_daten").style.display = "block";
     } else {
         document.getElementById("knotentabelle").style.display = "none";
         document.getElementById("elementtabelle").style.display = "none";
-        //document.getElementById("Loesungsvektor").style.display = "none";
+        document.getElementById("querschnittswerte").style.display = "none";
         document.getElementById("eingabe_duennQ_top").style.display = "none";
         document.getElementById("duennQ_save_daten").style.display = "none";
     }

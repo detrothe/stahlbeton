@@ -216,13 +216,9 @@ hr {
     background-color: #D8D8D8;
 }
 
-#Loesungsvektor {
+#querschnittswerte {
     display: none;
-    /*position: absolute;
-    top: 600px;
-    left: 10px;
-    width: 100%;*/
-    background-color: #D8D8D8;
+    /*background-color: #D8D8D8;*/
 }
 
 #wind_vertikal,
@@ -428,4 +424,18 @@ td.selected {
 .td_eng {
     padding: 1px;
 
+}
+
+#querschnittwerte_table {
+
+}
+#querschnittwerte_table td {
+    padding-left: 5px;
+    padding-right: 5px;
+    background-color: rgb(200, 200, 200);
+    width: 120px;
+}
+
+.querschnittwerte_table_z0 {
+    text-align: right;
 }
