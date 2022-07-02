@@ -57,6 +57,8 @@ export function sichtbar(displayName) {
         document.getElementById("spannung_mxp").style.display = "block";
         document.getElementById("spannung_mxs").style.display = "block";
         document.getElementById("normalspannung").style.display = "block";
+        document.getElementById("vergleichsspannung").style.display = "block";
+        document.getElementById("schubspannung").style.display = "block";
     } else {
         document.getElementById("knotentabelle").style.display = "none";
         document.getElementById("elementtabelle").style.display = "none";
@@ -66,6 +68,8 @@ export function sichtbar(displayName) {
         document.getElementById("spannung_mxp").style.display = "none";
         document.getElementById("spannung_mxs").style.display = "none";
         document.getElementById("normalspannung").style.display = "none";
+        document.getElementById("vergleichsspannung").style.display = "none";
+        document.getElementById("schubspannung").style.display = "none";
     }
 }
 

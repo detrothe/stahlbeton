@@ -1,5 +1,5 @@
 import {app, Detect} from './index';
-//import {selectedCellPoly} from './linglsystem';
+import {selectedCellPoly} from './base_tabelle.js';
 
 //(function () {
 
@@ -254,8 +254,12 @@ function positionMenu(e) {
  * @param {HTMLElement} link The link that was clicked
  */
 function menuItemListener(link) {
+    console.log("LINK", link)
     //console.log("Task ID - " + taskItemInContext.getAttribute("data-id") + ", Task action - " + link.getAttribute("data-action"));
     toggleMenuOff();
+
+    //const tableId = selectedCellPoly.tableId;
+    //console.log("menuItemListener, tableId=", selectedCellPoly.tableId);
 
     if (link.getAttribute("data-action") === "copyFirst") {
         // Zellwert in zuletzt geklickter Zelle

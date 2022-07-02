@@ -31,7 +31,7 @@ body {
 /* The grid container */
 .grid-container {
     display: grid;
-    width: min(100%,1500px);
+    width: min(100%, 1500px);
     margin: auto;
     grid-template-areas:
     'header header header header header'
@@ -82,6 +82,7 @@ body {
     grid-area: rand;
     background-color: #f5f5f5;
 }
+
 .rand1 {
     grid-area: rand1;
     /*background-color: #f5f5f5;*/
@@ -94,7 +95,7 @@ body {
     background-color: #f1f1f1;
     padding: 5px;
     text-align: center;
-    font-size: 10px;  /*0.7rem*/
+    font-size: 10px; /*0.7rem*/
 }
 
 /* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
@@ -276,8 +277,9 @@ input:valid {
     text-align: right;
     font-size: 1em;
 }
+
 .zellew0 {
-    wrap-option: false  ;
+    wrap-option: false;
     text-align: right;
     font-size: 1em;
 }
@@ -287,6 +289,7 @@ input:valid {
     text-align: right;
     font-size: 1em;
 }
+
 .zelle {
     width: 50px;
 }
@@ -306,6 +309,7 @@ input:valid {
 .input_wind {
     width: 80px;
 }
+
 #input-container {
     /*position: absolute;
     top: 10px;
@@ -361,8 +365,7 @@ input:valid {
 }
 
 #nodeTable th,
-#elemTable th
-{
+#elemTable th {
     font-weight: normal;
     text-align: center;
 }
@@ -380,6 +383,7 @@ td.selected {
     /*background-color: orange;*/
     width: 200px;
 }
+
 .table_sigma td {
     /*background-color: orange;*/
     width: 100px;
@@ -387,10 +391,10 @@ td.selected {
 
 #img_stress {
     display: none;
-/*    width: 100%;
-    height: auto;
+    /*    width: 100%;
+        height: auto;
 
- */
+     */
 }
 
 #beton,
@@ -421,6 +425,7 @@ td.selected {
     padding: 1px;
     width: 90px;
 }
+
 .td_eng {
     padding: 1px;
 
@@ -429,6 +434,7 @@ td.selected {
 #querschnittwerte_table {
 
 }
+
 #querschnittwerte_table td {
     padding-left: 5px;
     padding-right: 5px;
@@ -439,9 +445,16 @@ td.selected {
 .querschnittwerte_table_z0 {
     text-align: right;
 }
-#spannung_mxp, #spannung_mxs, #normalspannung {
+
+#spannung_mxp, #spannung_mxs, #normalspannung, #vergleichsspannung, #schubspannung {
     display: none;
 }
+
 .table_spannung_cell_center {
     text-align: center;
+}
+
+.table_spannung_cell_center1 {
+    text-align: center;
+    background-color: lightgrey;
 }

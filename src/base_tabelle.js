@@ -1,8 +1,8 @@
-
 import * as d3 from "d3";
+import {table_index} from "./duennQ_tabelle";
 
 
-export const selectedCellPoly = {
+export const selectedCellPoly = {   // export const
     isSelected: false,
     selectedCellRow: -1,
     selectedCellCol: -1,
@@ -10,8 +10,8 @@ export const selectedCellPoly = {
     row: -1,
     wert: 0,
     activatedMember: null,
-    selColY: [],
-    selColZ: [],
+    //selColY: [],
+    //selColZ: [],
     startRowIndex: null,
     startCellIndex: null,
     pointerIsDown: false,
@@ -22,6 +22,49 @@ export const selectedCellPoly = {
     nZeilen: 0,
     nSpalten: 0
 };
+
+class selectedtable {
+    tableId = null
+    isSelected = false
+    selectedCellRow = -1
+    selectedCellCol = -1
+    col = -1
+    row = -1
+    wert = 0
+    activatedMember = null
+    //selColY= []
+    //selColZ= []
+    startRowIndex = null
+    startCellIndex = null
+    pointerIsDown = false
+    startx = 0
+    starty = 0
+    zelle = null
+    nZeilen = 0
+    nSpalten = 0
+}
+
+const tableInfo = []
+tableInfo.push(new selectedtable)  // nodeTable
+tableInfo.push(new selectedtable)  // elemTable
+
+/*
+class test {
+    index;
+    feld=[]
+}
+
+const dd = []
+
+dd.push(new test);
+dd[0].index = 11
+dd[0].feld = new Array(4)
+dd[0].feld[1]=1
+dd.push(new test)
+
+//console.log("dd",dd)
+
+ */
 
 //----------------------------------------------------------------------------------------------
 export function tabulate(theDiv, id, data, columns) {
@@ -55,9 +98,9 @@ export function tabulate(theDiv, id, data, columns) {
     // create a cell in each row for each column
     const cells = rows.selectAll('td')
         .data(function (row) {
-            return columns.map(function (column,spalte) {
-                console.log("function (column)", spalte,column,row[column]);
-                if ( spalte === 0) {
+            return columns.map(function (column, spalte) {
+                console.log("function (column)", spalte, column, row[column]);
+                if (spalte === 0) {
                     return {column: column, value: zeile++};
                 } else {
                     return {column: column, value: ""};  // row[column]
@@ -79,13 +122,17 @@ export function tabulate(theDiv, id, data, columns) {
 
         .on("touchstart", function (ev) {
             const tableId = ev.target.offsetParent.id;
+            const tableIndex = table_index(tableId)
             selectedCellPoly.tableId = tableId;
+            tableInfo[tableIndex].tableId = tableId;
 
             let touchobj = ev.changedTouches[0]; // erster Finger
             selectedCellPoly.startx = parseInt(touchobj.clientX); // X/Y-Koordinaten relativ zum Viewport
             selectedCellPoly.starty = parseInt(touchobj.clientY);
-            console.log("touchstart bei ClientX: " + selectedCellPoly.startx + "px ClientY: " + selectedCellPoly.starty + "px");
-
+            //console.log("touchstart bei ClientX: " + selectedCellPoly.startx + "px ClientY: " + selectedCellPoly.starty + "px");
+            tableInfo[tableIndex].startx = parseInt(touchobj.clientX); // X/Y-Koordinaten relativ zum Viewport
+            tableInfo[tableIndex].starty = parseInt(touchobj.clientY);
+            //console.log("touchstart bei ClientX: " + tableInfo[tableIndex].startx + "px ClientY: " + tableInfo[tableIndex].starty + "px");
 
             //ev.preventDefault();
 
@@ -95,15 +142,15 @@ export function tabulate(theDiv, id, data, columns) {
                 console.log("is selected", $(this).parent());
                 const el = document.getElementById("input_neq");
                 if (el) {
-                    const npkte = el.value;
+                    //const npkte = el.value;
                     $("#" + tableId + " td").removeClass("highlight");
-                    for (let i = 0; i < npkte; i++) {
-                        selectedCellPoly.selColY[i] = false;
-                        selectedCellPoly.selColZ[i] = false;
-                    }
+                    //for (let i = 0; i < npkte; i++) {
+                    //    selectedCellPoly.selColY[i] = false;
+                    //    selectedCellPoly.selColZ[i] = false;
+                    //}
                 }
             }
-            console.log("cell", $(this), $(this).parent().index());
+            //console.log("cell", $(this), $(this).parent().index());
             const row = Number($(this).parent().index()) + 1;
             const col = $(this).index();
             if (col === 1 || col === 2) {
@@ -117,15 +164,15 @@ export function tabulate(theDiv, id, data, columns) {
                 selectedCellPoly.wert = wert;
                 selectedCellPoly.activatedMember = activatedMember;
                 selectedCellPoly.isSelected = true;
-                if (col === 1) selectedCellPoly.selColY[row - 1] = true;
-                else if (col === 2) selectedCellPoly.selColZ[row - 1] = true;
+                //if (col === 1) selectedCellPoly.selColY[row - 1] = true;
+                //else if (col === 2) selectedCellPoly.selColZ[row - 1] = true;
                 selectedCellPoly.startRowIndex = row;
                 selectedCellPoly.startCellIndex = col;
 
                 const str = tableId + "-" + row + "-" + col;
                 selectedCellPoly.zelle = document.getElementById(str);
 
-                console.log("str", str, cellLeft, cellTop);
+                //console.log("str", str, cellLeft, cellTop);
                 /*
                                 const elemNeu = document.getElementById(str);
                                 elemNeu.focus();
@@ -155,8 +202,11 @@ export function tabulate(theDiv, id, data, columns) {
 export function MOUSEMOVE(ev) { // mousemove
     const tableId = ev.target.offsetParent.id;
     //console.log("MMOVE mouseover", tableId, ev.buttons);  // ev.path[3].id
+    const tableIndex = table_index(tableId)
+
     selectedCellPoly.tableId = tableId;
-    let neq = document.getElementById(tableId).rows.length;
+    tableInfo[tableIndex].tableId = tableId;
+    let nZeilen = document.getElementById(tableId).rows.length - 1;
     //console.log("neq = ", neq)
 
     if (ev.buttons === 1) {
@@ -166,42 +216,43 @@ export function MOUSEMOVE(ev) { // mousemove
         if (col >= 1) {
             const activatedMember = $(ev.target).closest("td");
             activatedMember.addClass("highlight");
-            selectedCellPoly.isSelected = true;
+            tableInfo[tableIndex].isSelected = true;
             //console.log("column", col, row);
-            if (col === 1) selectedCellPoly.selColY[row - 1] = true;
-            else if (col === 2) selectedCellPoly.selColZ[row - 1] = true;
+            //if (col === 1) stableInfo[tableIndex].selColY[row - 1] = true;
+            //else if (col === 2) tableInfo[tableIndex].selColZ[row - 1] = true;
 
             const cellIndex = col;
             const rowIndex = row;
 
             let rowStart, rowEnd, cellStart, cellEnd;
 
-            if (rowIndex < selectedCellPoly.startRowIndex) {
+            if (rowIndex < tableInfo[tableIndex].startRowIndex) {
                 rowStart = rowIndex;
-                rowEnd = selectedCellPoly.startRowIndex;
+                rowEnd = tableInfo[tableIndex].startRowIndex;
             } else {
-                rowStart = selectedCellPoly.startRowIndex;
+                rowStart = tableInfo[tableIndex].startRowIndex;
                 rowEnd = rowIndex;
             }
 
-            if (cellIndex < selectedCellPoly.startCellIndex) {
+            if (cellIndex < tableInfo[tableIndex].startCellIndex) {
                 cellStart = cellIndex;
-                cellEnd = selectedCellPoly.startCellIndex;
+                cellEnd = tableInfo[tableIndex].startCellIndex;
             } else {
-                cellStart = selectedCellPoly.startCellIndex;
+                cellStart = tableInfo[tableIndex].startCellIndex;
                 cellEnd = cellIndex;
             }
             // console.log("startend", rowStart, rowEnd, col, row, rowStart, rowEnd, cellStart, cellEnd);
 
             $("#" + tableId + " td").removeClass("highlight");
-            for (let i = 0; i < neq; i++) {
-                selectedCellPoly.selColY[i] = false;
-                selectedCellPoly.selColZ[i] = false;
-            }
+            //for (let i = 0; i < nZeilen; i++) {
+            //    selectedCellPoly.selColY[i] = false;
+            //    selectedCellPoly.selColZ[i] = false;
+            //}
             const tabelle = document.getElementById(tableId);
             const nSpalten = tabelle.rows[0].cells.length - 1;
 
-            for (let i = 1; i <= neq; i++) {
+            console.log("move", nZeilen, nSpalten)
+            for (let i = 1; i < nZeilen; i++) {
                 for (let j = 1; j <= nSpalten; j++) {
                     tabelle.rows.item(i).cells.item(j).selekt = false;
                 }
@@ -212,8 +263,8 @@ export function MOUSEMOVE(ev) { // mousemove
                 for (let j = cellStart; j <= cellEnd; j++) {
                     //rowCells.eq(j).addClass("selected");
                     tabelle.rows.item(i).cells.item(j).classList.add("highlight");
-                    if (j === 1) selectedCellPoly.selColY[i - 1] = true;
-                    if (j === 2) selectedCellPoly.selColZ[i - 1] = true;
+                    //if (j === 1) selectedCellPoly.selColY[i - 1] = true;
+                    //if (j === 2) selectedCellPoly.selColZ[i - 1] = true;
                     tabelle.rows.item(i).cells.item(j).selekt = true;
 
                 }
@@ -224,7 +275,10 @@ export function MOUSEMOVE(ev) { // mousemove
 
 export function MOUSEDOWN(ev) {
     const tableId = ev.target.offsetParent.id;
+    const tableIndex = table_index(tableId)
     selectedCellPoly.tableId = tableId;
+    tableInfo[tableIndex].tableId = tableId;
+    const tabelle = document.getElementById(tableId);
 
     //console.log("mousedown", ev.pageX, ev.pageY, ev.which, ev.button);
     //document.getElementById("polyCanvas").style.display = "block";
@@ -236,13 +290,15 @@ export function MOUSEDOWN(ev) {
         //ev.preventDefault();
         const row = Number($(this).parent().index()) + 1;
         const col = $(this).index();
-        const tabelle = document.getElementById(tableId);
+        console.log("selekt", tableId, tabelle.rows[row].cells[col].selekt);
+
         if (tabelle.rows[row].cells[col].contentEditable === 'false') {
             const str = tableId + '-' + row + '-' + (col + 1);
-            console.log("contentEditable === false", row, col, str);
+            //console.log("contentEditable === false", row, col, str);
             selectedCellPoly.row = row;
             selectedCellPoly.col = col;
-
+            tableInfo[tableIndex].row = row
+            tableInfo[tableIndex].col = col
             const elemNeu = document.getElementById(str);
             //elemNeu.classList.add('highlight');
             //elemNeu.innerText = "";
@@ -253,18 +309,30 @@ export function MOUSEDOWN(ev) {
 
         } else {
 
-            if (selectedCellPoly.isSelected) {
+            if (tableInfo[tableIndex].isSelected) {  // selectedCellPoly.isSelected
                 //selectedCellPoly.activatedMember.removeClass("highlight");
                 console.log("is selected", $(this).parent());
-                const el = document.getElementById("input_neq");
-                if (el) {
-                    const npkte = el.value;
-                    $("#" + tableId + " td").removeClass("highlight");
-                    for (let i = 0; i < npkte; i++) {
-                        selectedCellPoly.selColY[i] = false;
-                        selectedCellPoly.selColZ[i] = false;
+                //const el = document.getElementById("input_neq");
+                //if (el) {
+                //const nSpalten = document.getElementById(tableId).rows.length - 1;   //= el.value;
+                const nSpalten = tabelle.rows[0].cells.length - 1;
+
+                $("#" + tableId + " td").removeClass("highlight");
+                //for (let i = 0; i < nSpalten; i++) {
+                //    selectedCellPoly.selColY[i] = false;
+                //    selectedCellPoly.selColZ[i] = false;
+                //}
+
+                for (let i = 1; i < tabelle.rows.length; i++) {
+                    //console.log("i",i,tabelle.rows.length)
+                    const objCells = tabelle.rows.item(i).cells;
+                    for (let j = 1; j <= nSpalten; j++) {
+                        //console.log("j",j,nSpalten)
+                        objCells.item(j).selekt = false;
                     }
                 }
+
+                //}
 
             }
             console.log("cell", $(this), $(this).parent().index());
@@ -279,10 +347,18 @@ export function MOUSEDOWN(ev) {
                 selectedCellPoly.wert = wert;
                 selectedCellPoly.activatedMember = activatedMember;
                 selectedCellPoly.isSelected = true;
-                if (col === 1) selectedCellPoly.selColY[row - 1] = true;
-                else if (col === 2) selectedCellPoly.selColZ[row - 1] = true;
+                //if (col === 1) selectedCellPoly.selColY[row - 1] = true;
+                //else if (col === 2) selectedCellPoly.selColZ[row - 1] = true;
                 selectedCellPoly.startRowIndex = row;
                 selectedCellPoly.startCellIndex = col;
+
+                tableInfo[tableIndex].row = row;
+                tableInfo[tableIndex].col = col;
+                tableInfo[tableIndex].wert = wert;
+                tableInfo[tableIndex].activatedMember = activatedMember;
+                tableInfo[tableIndex].isSelected = true;
+                tableInfo[tableIndex].startRowIndex = row;
+                tableInfo[tableIndex].startCellIndex = col;
             }
         }
     }
@@ -291,56 +367,68 @@ export function MOUSEDOWN(ev) {
 
 export function KEYDOWN(ev) {
     const tableId = ev.target.offsetParent.id;
+    const tableIndex = table_index(tableId)
+    tableInfo[tableIndex].tableId = tableId;
+
     selectedCellPoly.tableId = tableId;
-    //console.log("in KEYDOWN", ev.keyCode, tableId);
+    //console.log("in KEYDOWN", tableId, tableIndex, ev.keyCode, tableId);
     // trap the return and space keys being pressed
     if (ev.keyCode === 32) {    // Leertaste
         ev.preventDefault();
     } else if (ev.keyCode === 13) {    // return
         ev.preventDefault();
 
-        const el = document.getElementById("input_neq");
-        if (el) {
-            const npkte = el.value;
+        //const el = document.getElementById("input_neq");
+        //if (el) {
+        const nZeilen = document.getElementById(tableId).rows.length - 1;  //= el.value;
 
-            const tabelle = document.getElementById(tableId);
-            const nSpalten = tabelle.rows[0].cells.length - 1;
-            //console.log("Taste Tab gedrückt",tabelle.rows[selectedCellPoly.row].cells[selectedCellPoly.col]);
-            //console.log("Taste Tab gedrückt",tabelle.rows[selectedCellPoly.row].cells.item(selectedCellPoly.col));
-            //console.log("tabelle", tabelle.classList);
-            //tabelle.rows[selectedCellPoly.row].cells[selectedCellPoly.col].removeClass("highlight");
-            const row = selectedCellPoly.row;
-            const col = selectedCellPoly.col;
-            let str = tableId + '-' + row + '-' + col;
-            const elem = document.getElementById(str);
-            console.log("<RETURN> ID", str, elem.id, elem.classList);
-            elem.classList.remove('highlight');  // alle selektierte Zellen löschen
-            for (let i = 0; i < npkte; i++) {
-                selectedCellPoly.selColY[i] = false;
-                selectedCellPoly.selColZ[i] = false;
+        const tabelle = document.getElementById(tableId);
+        const nSpalten = tabelle.rows[0].cells.length - 1;
+        //console.log("Taste Tab gedrückt",tabelle.rows[selectedCellPoly.row].cells[selectedCellPoly.col]);
+        //console.log("Taste Tab gedrückt",tabelle.rows[selectedCellPoly.row].cells.item(selectedCellPoly.col));
+        //console.log("tabelle", tabelle.classList);
+        //tabelle.rows[selectedCellPoly.row].cells[selectedCellPoly.col].removeClass("highlight");
+        const row = tableInfo[tableIndex].row;
+        const col = tableInfo[tableIndex].col;
+        console.log("KEYDOWN,nSpalten,row,col", nSpalten, row, col)
+        let str = tableId + '-' + row + '-' + col;
+        const elem = document.getElementById(str);
+        //console.log("<RETURN> ID", str, elem.id, elem.classList);
+        elem.classList.remove('highlight');  // alle selektierte Zellen löschen
+        //for (let i = 0; i < nZeilen; i++) {
+        //    selectedCellPoly.selColY[i] = false;
+        //    selectedCellPoly.selColZ[i] = false;
+        //}
+
+        for (let i = 1; i < tabelle.rows.length; i++) {
+            const objCells = tabelle.rows.item(i).cells;
+            for (let j = 1; j <= nSpalten; j++) {
+                objCells.item(j).selekt = false;
             }
-            //$("#polygonTable td").removeClass("highlight");
-            if (col < nSpalten) {
-                str = tableId + '-' + row + '-' + (col + 1);
-            } else if (col === nSpalten) {
-                if (row < npkte) {
-                    str = tableId + '-' + Number(row + 1) + '-1';
-                } else {
-                    str = tableId + '-1-1';
-                }
-            }
-            console.log("col,nSpalten", col, nSpalten, str)
-
-            console.log("idTable", str);
-            const elemNeu = document.getElementById(str);
-            elemNeu.classList.add('highlight');
-            elemNeu.innerText = "";
-            elemNeu.focus();
-            const evt = new Event("mousedown", {"bubbles": true, "cancelable": false});
-            evt.button = 0;     // linke Maustaste
-            elemNeu.dispatchEvent(evt);
-
         }
+
+        //$("#polygonTable td").removeClass("highlight");
+        if (col < nSpalten) {
+            str = tableId + '-' + row + '-' + (col + 1);
+        } else if (col === nSpalten) {
+            if (row < nZeilen) {
+                str = tableId + '-' + Number(row + 1) + '-1';
+            } else {
+                str = tableId + '-1-1';
+            }
+        }
+        console.log("col,nSpalten", col, nSpalten, str)
+
+        console.log("idTable", str);
+        const elemNeu = document.getElementById(str);
+        elemNeu.classList.add('highlight');
+        elemNeu.innerText = str;
+        elemNeu.focus();
+        const evt = new Event("mousedown", {"bubbles": true, "cancelable": false});
+        evt.button = 0;     // linke Maustaste
+        elemNeu.dispatchEvent(evt);
+
+        //}
 
     }
 }
@@ -373,8 +461,8 @@ export function resize_Tabelle(idTable, nRowNew, nColNew) {
         for (let i = 1; i <= nZeilen - nRowNew; i++) {
             table.deleteRow(-1);
             //console.log("selRow",selectedCellPoly.selRow);
-            selectedCellPoly.selColY.length -= 1;
-            selectedCellPoly.selColZ.length -= 1;
+            //selectedCellPoly.selColY.length -= 1;
+            //selectedCellPoly.selColZ.length -= 1;
         }
 
     }
@@ -386,6 +474,8 @@ export function resize_Tabelle(idTable, nRowNew, nColNew) {
             //console.log("row",row);
             for (let j = nSpalten + 1; j <= nColNew; j++) {   // nZeilen + 1; j <= nRowNew
                 const newCell = row.insertCell(-1);
+                newCell.selekt = false;
+                //newCell.setAttribute("selekt", "false");
                 if (i === 0) {
                     const newText = document.createTextNode(String(j));
                     newCell.appendChild(newText);
@@ -404,7 +494,6 @@ export function resize_Tabelle(idTable, nRowNew, nColNew) {
                     newCell.addEventListener("keydown", KEYDOWN);
                     newCell.id = str;
                     newCell.wrap = false;
-
                 }
             }
         }
@@ -413,9 +502,8 @@ export function resize_Tabelle(idTable, nRowNew, nColNew) {
     if (nRowNew > nZeilen) {
 
         for (let i = nZeilen + 1; i <= nRowNew; i++) {
-            selectedCellPoly.selColY.push(false);
-            selectedCellPoly.selColZ.push(false);
-            //console.log("selRow",selectedCellPoly.selRow);
+            //selectedCellPoly.selColY.push(false);
+            //selectedCellPoly.selColZ.push(false);
 
             // Insert a row at the end of the table
             let newRow = table.insertRow(-1);
@@ -436,6 +524,8 @@ export function resize_Tabelle(idTable, nRowNew, nColNew) {
                 newCell.appendChild(newText);
                 newCell.style.border = 'solid 1px';
                 newCell.style.padding = '5px';
+                //newCell.setAttribute("selekt", "false");
+                newCell.selekt = false;
                 if (j === 0) {
                     newCell.style.textAlign = "center";
                     newCell.style.border = 'none';

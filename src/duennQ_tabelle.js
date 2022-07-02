@@ -26,3 +26,13 @@ export function resizeTable() {
     resize_Tabelle("elemTable", nelem, 5);
 
 }
+
+
+export function table_index( idTable ) {
+    if ( idTable === 'nodeTable') {
+        return 0;
+    } else if ( idTable === 'elemTable') {
+        return 1;
+    }
+    return undefined;
+}

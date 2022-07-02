@@ -1,5 +1,6 @@
 
 import './kdTabelle.js'
+import './base_tabelle.js'
 
 //import {kdtab} from './kdtab.js';
 import {testeZahl, SDuennTruss, sichtbar} from "./utility.js";
