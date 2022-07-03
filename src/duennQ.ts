@@ -1,8 +1,8 @@
-import {tabulate, selectedCellPoly} from "./base_tabelle.js"
+import {tabulate} from "./base_tabelle.js"
 
 import {gauss} from "./gauss.js"
 import {testeZahl, sichtbar, testNumber} from './utility.js';
-import {resizeTable} from "./duennQ_tabelle.js";
+import {resizeTable, clear_Tabelle} from "./duennQ_tabelle.js";
 
 /*
 class test {
@@ -28,8 +28,8 @@ btn1.addEventListener('click', duennQ);
 const btn2 = document.getElementById("resize");
 btn2.addEventListener('click', resizeTable);
 
-//const btn3 = document.getElementById("clearTable");
-//btn3.addEventListener('click', clear_polyTabelle);
+const btn3 = document.getElementById("clearTable");
+btn3.addEventListener('click', clear_Tabelle);
 
 
 //------------------------------------------------------------------------------------------------
@@ -843,13 +843,17 @@ export function duennQ() {
 
     let th0 = table.tHead.appendChild(document.createElement("th"));
     th0.innerHTML = "El No";
+    th0.title ="Elementnummer"
     th0.setAttribute("class", "table_spannung_cell_center");
     let th1 = table.tHead.appendChild(document.createElement("th"));
-    th1.innerHTML = "&tau;<sub>xs0,R</sub>";
+    th1.innerHTML = "&tau;<sub>xs0,L</sub>";
+    th1.title = "Schubspannung linke Seite aus Anteil offener Querschnitt"
     let th2 = table.tHead.appendChild(document.createElement("th"));
-    th2.innerHTML = "&tau;<sub>xs0,L</sub>";
+    th2.innerHTML = "&tau;<sub>xs0,R</sub>";
+    th2.title = "Schubspannung rechte Seite aus Anteil offener Querschnitt"
     let th3 = table.tHead.appendChild(document.createElement("th"));
     th3.innerHTML = "&tau;<sub>xs1</sub>";
+    th3.title = "Schubspannung aus Anteil geschlossener Querschnitt"
 
     for (i = 0; i < nelem; i++) {
 
@@ -862,11 +866,11 @@ export function duennQ() {
         newCell.setAttribute("class", "table_spannung_cell_center");
 
         newCell = newRow.insertCell(1);  // Insert a cell in the row at index 1
-        newText = document.createTextNode(truss[i].tau_p0R[0].toFixed(2));  // Append a text node to the cell
+        newText = document.createTextNode(truss[i].tau_p0L[0].toFixed(2));  // Append a text node to the cell
         newCell.appendChild(newText);
 
         newCell = newRow.insertCell(2);  // Insert a cell in the row at index 1
-        newText = document.createTextNode(truss[i].tau_p0L[0].toFixed(2));  // Append a text node to the cell
+        newText = document.createTextNode(truss[i].tau_p0R[0].toFixed(2));  // Append a text node to the cell
         newCell.appendChild(newText);
 
         newCell = newRow.insertCell(3);  // Insert a cell in the row at index 1
@@ -896,13 +900,17 @@ export function duennQ() {
 
     th0 = table.tHead.appendChild(document.createElement("th"));
     th0.innerHTML = "El No";
+    th0.title ="Elementnummer"
     th0.setAttribute("class", "table_spannung_cell_center");
     th1 = table.tHead.appendChild(document.createElement("th"));
     th1.innerHTML = "&tau;<sub>xs1</sub>";
+    th1.title = "Schubspannung am Elementanfang, Elementknoten 1"
     th2 = table.tHead.appendChild(document.createElement("th"));
     th2.innerHTML = "&tau;<sub>xsm</sub>";
+    th2.title = "Schubspannung in Elementmitte"
     th3 = table.tHead.appendChild(document.createElement("th"));
     th3.innerHTML = "&tau;<sub>xs2</sub>";
+    th3.title = "Schubspannung am Elementende, Elementknoten 2"
 
     for (i = 0; i < nelem; i++) {
 
@@ -950,19 +958,26 @@ export function duennQ() {
 
     th0 = table.tHead.appendChild(document.createElement("th"));
     th0.innerHTML = "El No";
+    th0.title ="Elementnummer"
     th0.setAttribute("class", "table_spannung_cell_center");
     th1 = table.tHead.appendChild(document.createElement("th"));
-    th1.innerHTML = "&tau;<sub>1,R</sub>";
+    th1.innerHTML = "&tau;<sub>1,L</sub>";
+    th1.title = "Schubspannung am Elementanfang, Elementknoten 1, linke Seite"
     th2 = table.tHead.appendChild(document.createElement("th"));
-    th2.innerHTML = "&tau;<sub>m,R</sub>";
+    th2.innerHTML = "&tau;<sub>m,L</sub>";
+    th2.title = "Schubspannung in Elementmitte, linke Seite"
     th3 = table.tHead.appendChild(document.createElement("th"));
-    th3.innerHTML = "&tau;<sub>2,R</sub>";
+    th3.innerHTML = "&tau;<sub>2,L</sub>";
+    th3.title = "Schubspannung am Elementende, Elementknoten 2, linke Seite"
     let th4 = table.tHead.appendChild(document.createElement("th"));
-    th4.innerHTML = "&tau;<sub>1,L</sub>";
+    th4.innerHTML = "&tau;<sub>1,R</sub>";
+    th4.title = "Schubspannung am Elementanfang, Elementknoten 1, rechte Seite"
     let th5 = table.tHead.appendChild(document.createElement("th"));
-    th5.innerHTML = "&tau;<sub>m,L</sub>";
+    th5.innerHTML = "&tau;<sub>m,R</sub>";
+    th5.title = "Schubspannung in Elementmitte, rechte Seite"
     let th6 = table.tHead.appendChild(document.createElement("th"));
-    th6.innerHTML = "&tau;<sub>2,L</sub>";
+    th6.innerHTML = "&tau;<sub>2,R</sub>";
+    th6.title = "Schubspannung am Elementende, Elementknoten 2, rechte Seite"
 
     let newRow = table.insertRow(-1);
     let newCell, newText
@@ -972,12 +987,12 @@ export function duennQ() {
     newCell.colSpan = "1"
 
     newCell = newRow.insertCell(1);  // Insert a cell in the row at index 0
-    newText = document.createTextNode("rechte Seite");  // Append a text node to the cell
+    newText = document.createTextNode("linke Seite");  // Append a text node to the cell
     newCell.appendChild(newText);
     newCell.setAttribute("class", "table_spannung_cell_center1");
     newCell.colSpan = "3"
     newCell = newRow.insertCell(2);  // Insert a cell in the row at index 0
-    newText = document.createTextNode("linke Seite");  // Append a text node to the cell
+    newText = document.createTextNode("rechte Seite");  // Append a text node to the cell
     newCell.appendChild(newText);
     newCell.setAttribute("class", "table_spannung_cell_center1");
     newCell.colSpan = "3"
@@ -993,27 +1008,27 @@ export function duennQ() {
         newCell.setAttribute("class", "table_spannung_cell_center");
 
         newCell = newRow.insertCell(1);  // Insert a cell in the row at index 1
-        newText = document.createTextNode(truss[i].stress_R[0].toFixed(2));  // Append a text node to the cell
-        newCell.appendChild(newText);
-
-        newCell = newRow.insertCell(2);  // Insert a cell in the row at index 1
-        newText = document.createTextNode(truss[i].stress_R[1].toFixed(2));  // Append a text node to the cell
-        newCell.appendChild(newText);
-
-        newCell = newRow.insertCell(3);  // Insert a cell in the row at index 1
-        newText = document.createTextNode(truss[i].stress_R[2].toFixed(2));  // Append a text node to the cell
-        newCell.appendChild(newText);
-
-        newCell = newRow.insertCell(4);  // Insert a cell in the row at index 1
         newText = document.createTextNode(truss[i].stress_L[0].toFixed(2));  // Append a text node to the cell
         newCell.appendChild(newText);
 
-        newCell = newRow.insertCell(5);  // Insert a cell in the row at index 1
+        newCell = newRow.insertCell(2);  // Insert a cell in the row at index 1
         newText = document.createTextNode(truss[i].stress_L[1].toFixed(2));  // Append a text node to the cell
         newCell.appendChild(newText);
 
-        newCell = newRow.insertCell(6);  // Insert a cell in the row at index 1
+        newCell = newRow.insertCell(3);  // Insert a cell in the row at index 1
         newText = document.createTextNode(truss[i].stress_L[2].toFixed(2));  // Append a text node to the cell
+        newCell.appendChild(newText);
+
+        newCell = newRow.insertCell(4);  // Insert a cell in the row at index 1
+        newText = document.createTextNode(truss[i].stress_R[0].toFixed(2));  // Append a text node to the cell
+        newCell.appendChild(newText);
+
+        newCell = newRow.insertCell(5);  // Insert a cell in the row at index 1
+        newText = document.createTextNode(truss[i].stress_R[1].toFixed(2));  // Append a text node to the cell
+        newCell.appendChild(newText);
+
+        newCell = newRow.insertCell(6);  // Insert a cell in the row at index 1
+        newText = document.createTextNode(truss[i].stress_R[2].toFixed(2));  // Append a text node to the cell
         newCell.appendChild(newText);
     }
 
@@ -1041,11 +1056,14 @@ export function duennQ() {
 
     th0 = table.tHead.appendChild(document.createElement("th"));
     th0.innerHTML = "El No";
+    th0.title ="Elementnummer"
     th0.setAttribute("class", "table_spannung_cell_center");
     th1 = table.tHead.appendChild(document.createElement("th"));
     th1.innerHTML = "&sigma;<sub>x1</sub>";
+    th1.title ="Normalspannung in Mittellinie, Elementanfang"
     th2 = table.tHead.appendChild(document.createElement("th"));
     th2.innerHTML = "&sigma;<sub>x2</sub>";
+    th2.title ="Normalspannung in Mittellinie, Elementende"
 
     for (i = 0; i < nelem; i++) {
 
@@ -1089,13 +1107,17 @@ export function duennQ() {
 
     th0 = table.tHead.appendChild(document.createElement("th"));
     th0.innerHTML = "El No";
+    th0.title ="Elementnummer"
     th0.setAttribute("class", "table_spannung_cell_center");
     th1 = table.tHead.appendChild(document.createElement("th"));
     th1.innerHTML = "&sigma;<sub>v1</sub>";
+    th1.title ="Größtwert der Vergleichsspannung, Elementanfang"
     th2 = table.tHead.appendChild(document.createElement("th"));
     th2.innerHTML = "&sigma;<sub>vm</sub>";
+    th2.title ="Größtwert der Vergleichsspannung, Elementmitte"
     th3 = table.tHead.appendChild(document.createElement("th"));
     th3.innerHTML = "&sigma;<sub>v2</sub>";
+    th3.title ="Größtwert der Vergleichsspannung, Elementende"
 
     for (i = 0; i < nelem; i++) {
 

@@ -422,7 +422,7 @@ export function KEYDOWN(ev) {
         console.log("idTable", str);
         const elemNeu = document.getElementById(str);
         elemNeu.classList.add('highlight');
-        elemNeu.innerText = str;
+        elemNeu.innerText = "";
         elemNeu.focus();
         const evt = new Event("mousedown", {"bubbles": true, "cancelable": false});
         evt.button = 0;     // linke Maustaste
@@ -546,3 +546,5 @@ export function resize_Tabelle(idTable, nRowNew, nColNew) {
     }
 
 }
+
+

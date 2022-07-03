@@ -28,11 +28,36 @@ export function resizeTable() {
 }
 
 
+//----------------------------------------------------------------------------------------------
 export function table_index( idTable ) {
+//----------------------------------------------------------------------------------------------
     if ( idTable === 'nodeTable') {
         return 0;
     } else if ( idTable === 'elemTable') {
         return 1;
     }
     return undefined;
+}
+
+
+//----------------------------------------------------------------------------------------------
+export function clear_Tabelle() {
+//----------------------------------------------------------------------------------------------
+
+    const tabelle = document.getElementById("nodeTable");
+    let nSpalten = tabelle.rows[0].cells.length;
+    for (let i = 1; i < tabelle.rows.length; i++) {
+        for (let j = 1; j < nSpalten; j++) {
+            tabelle.rows[i].cells[j].innerText = "";
+        }
+    }
+
+    const eTabelle = document.getElementById("elemTable");
+    nSpalten = eTabelle.rows[0].cells.length;
+    for (let i = 1; i < eTabelle.rows.length; i++) {
+        for (let j = 1; j < nSpalten; j++) {
+            eTabelle.rows[i].cells[j].innerText = "";
+        }
+    }
+
 }
