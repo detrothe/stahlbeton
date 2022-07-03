@@ -1,7 +1,8 @@
 //import './listener.js';
 
 import {app} from "./index";
-
+import {testeZahl} from "./utility";
+import {resizeTable} from "./duennQ_tabelle";
 
 function handleFileSelect_read() {
 
@@ -21,13 +22,7 @@ function handleFileSelect_read() {
 
         // Loop through the FileList and render image files as thumbnails.
         for (let i = 0, f; f = files[i]; i++) {
-            /*
-                    // Only process image files.
-                    if (!f.type.match('txt.*')) {
-            console.log("kein match");
-                        continue;
-                    }
-            */
+
             filename = files[0].name;
             console.log("filename: ", files[0].name);
 
@@ -48,28 +43,42 @@ function handleFileSelect_read() {
                     console.log("und zurück", jobj);
 
                     // in Tabelle schreiben
-                    document.getElementById("input_neq").value = jobj.neq;
-                    document.getElementById("input_nLF").value = jobj.nlf;
+                    document.getElementById("input_nodes").value = jobj.nnodes;
+                    document.getElementById("input_nelem").value = jobj.nelem;
+
+                    document.getElementById("Vy").value = jobj.Vy;
+                    document.getElementById("Vz").value = jobj.Vz;
+                    document.getElementById("Nx").value = jobj.Nx
+                    document.getElementById("Mxp").value = jobj.Mxp;
+                    document.getElementById("Mxs").value = jobj.Mxs;
+                    document.getElementById("Momega").value = jobj.Momega;
+                    document.getElementById("My").value = jobj.My;
+                    document.getElementById("Mz").value = jobj.Mz;
+
+                    document.getElementById("fyRd").value = jobj.fyRd;
+                    document.getElementById("EMod_ref").value = jobj.EMod_ref;
+                    document.getElementById("mue_ref").value = jobj.mue_ref;
+
 
                     resizeTable();
 
-                    const tabelle = document.getElementById("polygonTable");
+                    const tabelle = document.getElementById("nodeTable");
                     let nSpalten = tabelle.rows[0].cells.length;
                     let i, j;
                     for (i = 1; i < tabelle.rows.length; i++) {
                         for (j = 1; j < nSpalten; j++) {
 
-                            tabelle.rows[i].cells[j].innerText = jobj.a[i - 1][j - 1];
+                            tabelle.rows[i].cells[j].innerText = jobj.node[i - 1][j - 1];
                         }
                     }
 
-                    const rstabelle = document.getElementById("rsTable");
-                    nSpalten = rstabelle.rows[0].cells.length;
+                    const etabelle = document.getElementById("elemTable");
+                    nSpalten = etabelle.rows[0].cells.length;
 
-                    for (i = 1; i < tabelle.rows.length; i++) {
+                    for (i = 1; i < etabelle.rows.length; i++) {
                         for (j = 1; j < nSpalten; j++) {
 
-                            rstabelle.rows[i].cells[j].innerText = jobj.c[i - 1][j - 1];
+                            etabelle.rows[i].cells[j].innerText = jobj.elem[i - 1][j - 1];
                         }
                     }
 
@@ -94,46 +103,60 @@ async function handleFileSelect_save() {
     console.log("in select save");
     //console.log("filename", filename);
 
-    const elem = document.getElementById("input_neq");
+    const elem = document.getElementById("input_nodes");
 
     if (elem) {
 
         let i, j;
 
-        let tabelle = document.getElementById('rsTable');
-        let nZeilen = tabelle.rows.length - 1;
+        let tabelle = document.getElementById('nodeTable');
+        let n_nodes = tabelle.rows.length - 1;
         let nSpalten = tabelle.rows[0].cells.length - 1;
-        const neq = nZeilen;
-        const nlf = nSpalten;
+        //const neq = nZeilen;
+        //const nlf = nSpalten;
 
-        const a = Array.from(Array(nZeilen), () => new Array(nZeilen));
+        const node = Array.from(Array(n_nodes), () => new Array(nSpalten));
 
-        const c = Array.from(Array(nZeilen), () => new Array(nSpalten));
-
-        for (i = 0; i < nZeilen; i++) {
+        for (i = 0; i < n_nodes; i++) {
             for (j = 0; j < nSpalten; j++) {
-                c[i][j] = tabelle.rows[i + 1].cells[j + 1].innerText;
+                node[i][j] = tabelle.rows[i + 1].cells[j + 1].innerText;
                 //console.log(i,j,c[i][j]);
             }
         }
 
-        tabelle = document.getElementById('polygonTable');
-        nZeilen = tabelle.rows.length - 1;
+        tabelle = document.getElementById('elemTable');
+        let n_elem = tabelle.rows.length - 1;
         nSpalten = tabelle.rows[0].cells.length - 1;
 
-        for (i = 0; i < nZeilen; i++) {
+        const elem = Array.from(Array(n_elem), () => new Array(nSpalten));
+
+        for (i = 0; i < n_elem; i++) {
             for (j = 0; j < nSpalten; j++) {
-                a[i][j] = tabelle.rows[i + 1].cells[j + 1].innerText;
+                elem[i][j] = tabelle.rows[i + 1].cells[j + 1].innerText;
                 //console.log(i,j,a[i][j]);
             }
         }
 
         let polyData = {
-            'neq': neq,
-            'nlf': nlf,
-            'a': a,
-            'c': c
+            'nnodes': n_nodes,
+            'nelem': n_elem,
+            'Vy': document.getElementById('Vy').value,
+            'Vz': document.getElementById('Vz').value,
+            'Nx': document.getElementById('Nx').value,
+            'Mxp': document.getElementById('Mxp').value,
+            'Mxs': document.getElementById('Mxs').value,
+            'Momega': document.getElementById('Momega').value,
+            'My': document.getElementById('My').value,
+            'Mz': document.getElementById('Mz').value,
+
+            'fyRd': document.getElementById('fyRd').value,
+            'EMod_ref': document.getElementById('EMod_ref').value,
+            'mue_ref': document.getElementById('mue_ref').value,
+
+            'elem': elem,
+            'node': node
         };
+
 
         let jsonse = JSON.stringify(polyData);
 

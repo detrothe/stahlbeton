@@ -1,5 +1,5 @@
 import {tabulate} from "./base_tabelle.js"
-
+import './dateien.js';
 import {gauss} from "./gauss.js"
 import {testeZahl, sichtbar, testNumber} from './utility.js';
 import {resizeTable, clear_Tabelle} from "./duennQ_tabelle.js";
