@@ -4,7 +4,7 @@ import {gauss} from "./gauss.js"
 import {testeZahl, sichtbar, testNumber} from './utility.js';
 import {resizeTable, clear_Tabelle} from "./duennQ_tabelle.js";
 import {systemlinien} from "./systemlinien";
-
+import {set_myScreen} from "./index.js"
 /*
 class test {
     index = 0;
@@ -267,6 +267,8 @@ export function duennQ() {
 
     let wert: any
     //let nelem: number = 2
+
+    set_myScreen();
 
     // Schnittgrößen einlesen
     let input = document.getElementById('Vy') as HTMLInputElement | null;

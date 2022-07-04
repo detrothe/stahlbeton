@@ -1,4 +1,3 @@
-
 import './kdTabelle.js'
 import './base_tabelle.js'
 
@@ -19,17 +18,26 @@ export const myScreen = {
     svgWidth: 0
 }
 
-myScreen.clientWidth = document.documentElement.clientWidth;
-myScreen.clientHeight = document.documentElement.clientHeight;
+// myScreen.clientWidth = document.documentElement.clientWidth;
+// myScreen.clientHeight = document.documentElement.clientHeight;
 
+set_myScreen();
 
-if (myScreen.clientWidth > 1500) {
-    myScreen.svgWidth = 1500;  //myScreen.clientWidth - 900;
+export function set_myScreen() {
+
+    myScreen.clientWidth = document.documentElement.clientWidth;
+    myScreen.clientHeight = document.documentElement.clientHeight;
+
+    console.log("myScreen", myScreen.clientWidth, myScreen.clientHeight, myScreen.svgWidth)
+
+    if (myScreen.clientWidth > 1500) {
+        myScreen.svgWidth = 1500;  //myScreen.clientWidth - 900;
+//    } else if (myScreen.clientWidth < 600) {
+//        myScreen.svgWidth = myScreen.clientWidth
+    } else {
+        myScreen.svgWidth = myScreen.clientWidth;
+    }
     document.getElementById("my-svg").style.width = myScreen.svgWidth + 'px';
-} else if (myScreen.clientWidth < 600) {
-    myScreen.svgWidth = myScreen.clientWidth
-} else {
-    myScreen.svgWidth = 700;
 }
 
 export function tangens() {
