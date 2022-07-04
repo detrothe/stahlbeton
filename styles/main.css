@@ -6,6 +6,10 @@ font-size:100%
     box-sizing: border-box;
 }
 
+:root {
+    --sgroesse: 0.9rem;
+}
+
 body {
     /* remove margins and scroll bars */
     margin: 2px;
@@ -39,7 +43,8 @@ body {
     grid-template-areas:
     'header header header header header'
     'topLeft topLeft topRight topRight topRight'
-    'left left left middle right'
+    'left left middle middle right'
+    'unten_grafik unten_grafik unten_grafik unten_grafik unten_grafik'
     'footer footer footer footer footer';
     /* grid-column-gap: 10px; - if you want gap between the columns */
 }
@@ -50,7 +55,8 @@ body {
 .middle,
 .rand,
 .rand1,
-.right {
+.right,
+unten_grafik {
     padding: 5px;
     /*height: 300px;  Should be removed. Only for demonstration */
 }
@@ -91,6 +97,9 @@ body {
     /*background-color: #f5f5f5;*/
     /*width: 0px;*/
 }
+.unten_grafik{
+    grid-area: unten_grafik;
+}
 
 /* Style the footer */
 .footer {
@@ -111,6 +120,7 @@ body {
       'left left left'
       'middle middle middle'
       'right right right'
+      'unten_grafik unten_grafik unten_grafik'
       'footer footer footer';
     }
 }
@@ -460,4 +470,51 @@ td.selected {
 .table_spannung_cell_center1 {
     text-align: center;
     background-color: lightgrey;
+}
+
+#my-svg {
+
+    width: 1000px;
+    height: 1000px;
+    background-color: rgb(110, 180, 180);
+}
+
+#cursor_coordy {
+    /*display: inline-block;*/
+    position: relative;
+    top: 10px;
+    left: 10px;
+    width: 4em;
+    height: 25px;
+    background-color: rgb(220, 220, 220);
+    padding: 3px;
+    margin-top: 0;
+    border-top: 0;
+    border-style: none;
+    font-size: var(--sgroesse);
+    display: flex;
+    align-items: center;
+    /*justify-content: center;*/
+}
+
+#cursor_coordz {
+    /*display: inline-block;*/
+    position: relative;
+    top: -15px;
+    left: calc(10px + 4em);
+    width: 4em;
+    height: 25px;
+    background-color: rgb(220, 220, 220);
+    padding: 3px;
+    margin-top: 0;
+    border-style: none;
+    border-top: 0;
+    font-size: var(--sgroesse);
+    display: flex;
+    align-items: center;
+    /*justify-content: center;}*/
+}
+
+#circleBasicTooltip {
+    position: absolute;
 }

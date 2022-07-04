@@ -59,6 +59,7 @@ export function sichtbar(displayName) {
         document.getElementById("normalspannung").style.display = "block";
         document.getElementById("vergleichsspannung").style.display = "block";
         document.getElementById("schubspannung").style.display = "block";
+        document.getElementById("my-svg").style.display = "block";
     } else {
         document.getElementById("knotentabelle").style.display = "none";
         document.getElementById("elementtabelle").style.display = "none";
@@ -70,6 +71,7 @@ export function sichtbar(displayName) {
         document.getElementById("normalspannung").style.display = "none";
         document.getElementById("vergleichsspannung").style.display = "none";
         document.getElementById("schubspannung").style.display = "none";
+        document.getElementById("my-svg").style.display = "none";
     }
 }
 

@@ -3,6 +3,7 @@ import './dateien.js';
 import {gauss} from "./gauss.js"
 import {testeZahl, sichtbar, testNumber} from './utility.js';
 import {resizeTable, clear_Tabelle} from "./duennQ_tabelle.js";
+import {systemlinien} from "./systemlinien";
 
 /*
 class test {
@@ -93,6 +94,8 @@ class TElement {
     sigma_v = [0.0, 0.0, 0.0]
     stress_R = [0.0, 0.0, 0.0]
     stress_L = [0.0, 0.0, 0.0]
+    pts_y = [0.0, 0.0, 0.0, 0.0]
+    pts_z = [0.0, 0.0, 0.0, 0.0]
 }
 
 
@@ -240,7 +243,7 @@ export function duennQ() {
     let i: number, neq: number
     let j: number, k: number, nod1: number, nod2: number, lmi: number, lmj: number, kn: number, ieq: number;
     let y1: number, y2: number, z1: number, z2: number, ys: number, zs: number, dy: number, dz: number, t: number,
-        sl: number;
+        sl: number, h: number, si2: number, co2: number;
     let si: number, co: number, sico: number, si0: number, co0: number, cc: number, bb: number, cr: number;
     let Hebely: number, Hebelz: number;
     let iP2: number, iM2: number;
@@ -384,12 +387,14 @@ export function duennQ() {
         I22 = t * sl * sl * sl / 12.0;
         si = dz / sl;
         co = dy / sl;
+        truss[i].sinus = si
+        truss[i].cosinus = co
         sico = si * co;
-        co = co * co;
-        si = si * si;
+        co2 = co * co;
+        si2 = si * si;
 
-        truss[i].Iyy = truss[i].ni * (I11 * co + I22 * si);
-        truss[i].Izz = truss[i].ni * (I11 * si + I22 * co);
+        truss[i].Iyy = truss[i].ni * (I11 * co2 + I22 * si2);
+        truss[i].Izz = truss[i].ni * (I11 * si2 + I22 * co2);
         truss[i].Iyz = -truss[i].ni * (I11 - I22) * sico;
         truss[i].Hebely = (y1 + y2) / 2.0;
         truss[i].Hebelz = (z1 + z2) / 2.0;
@@ -398,6 +403,17 @@ export function duennQ() {
         Gesamt_ys = Gesamt_ys + truss[i].ni * truss[i].Flaeche * (y1 + y2) / 2.0;
         Gesamt_zs = Gesamt_zs + truss[i].ni * truss[i].Flaeche * (z1 + z2) / 2.0;
         It_offen = It_offen + truss[i].ngi * sl * t * t * t / 3.0;
+
+        h = t / 2.0
+
+        truss[i].pts_y[0] = y1 + si * h      // für Grafik
+        truss[i].pts_z[0] = z1 - co * h
+        truss[i].pts_y[1] = y2 + si * h
+        truss[i].pts_z[1] = z2 - co * h
+        truss[i].pts_y[2] = y2 - si * h
+        truss[i].pts_z[2] = z2 + co * h
+        truss[i].pts_y[3] = y1 - si * h
+        truss[i].pts_z[3] = z1 + co * h
 
     }
 
@@ -477,6 +493,7 @@ export function duennQ() {
         truss[i].rt = (y1 * z2 - y2 * z1) / truss[i].sl;
         truss[i].R[0] = -truss[i].GModul * truss[i].dicke * truss[i].rt;
         truss[i].R[1] = -truss[i].R[0];
+
     }
 
     // Aufstellen der Steifigkeitsmatrix
@@ -1142,5 +1159,7 @@ export function duennQ() {
         newCell.appendChild(newText);
 
     }
+
+    systemlinien(node, truss, Gesamt_ys, Gesamt_zs, yM, zM, phi0 );
 
 }

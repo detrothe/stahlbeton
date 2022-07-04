@@ -7,10 +7,30 @@ import {testeZahl, SDuennTruss, sichtbar} from "./utility.js";
 
 import DetectOS from './detectos.js'
 import {init_contextmenu} from './contextMenu.js';
-//import {add2Numbers} from "./add2Numbers";
-import {duennQuer} from "./duennQ";
+
+//import {duennQuer} from "./duennQ";
 
 //import {TFVector} from "./TFArray";
+
+
+export const myScreen = {
+    clientWidth: 0,
+    clientHeight: 0,
+    svgWidth: 0
+}
+
+myScreen.clientWidth = document.documentElement.clientWidth;
+myScreen.clientHeight = document.documentElement.clientHeight;
+
+
+if (myScreen.clientWidth > 1500) {
+    myScreen.svgWidth = 1500;  //myScreen.clientWidth - 900;
+    document.getElementById("my-svg").style.width = myScreen.svgWidth + 'px';
+} else if (myScreen.clientWidth < 600) {
+    myScreen.svgWidth = myScreen.clientWidth
+} else {
+    myScreen.svgWidth = 700;
+}
 
 export function tangens() {
     console.log("in tangens");
