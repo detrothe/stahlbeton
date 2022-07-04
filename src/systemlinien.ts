@@ -212,18 +212,18 @@ export function systemlinien(node, truss, y_s: number, z_s: number, y_M: number,
         .append("div")
         .style("position", "absolute")
         .style("visibility", "hidden")
-        .style("z-index", "10")
+        .style("z-index", "120")
         .style("width", 20)
         .text("Schwerpunkt");
 
-    console.log("tooltip", tooltip);
+    console.log("--tooltip--", tooltip.text);
 
     d3.select("#circleBasicTooltip")
         .on("mouseover", function () {
             //console.log("in mouseover");
             d3.select(this)
                 .style("fill", "orange");
-            //tooltip.text("test");
+
             //console.log("tooltip",tooltip.value);
             return tooltip.style("visibility", "visible");
         })
@@ -249,7 +249,7 @@ export function systemlinien(node, truss, y_s: number, z_s: number, y_M: number,
         .append("div")
         .style("position", "absolute")
         .style("visibility", "hidden")
-        .style("z-index", "10")
+        .style("z-index", "120")
         .style("width", 20)
         .text("Schubmittelpunkt");
 
@@ -260,8 +260,8 @@ export function systemlinien(node, truss, y_s: number, z_s: number, y_M: number,
             //console.log("in mouseover");
             d3.select(this)
                 .style("fill", "orange");
-            //tooltip.text("test");
-            //console.log("tooltip",tooltip.value);
+
+            //console.log("tooltip_SM",tooltip_SM);
             return tooltip_SM.style("visibility", "visible");
         })
         .on("mousemove", function (event) {

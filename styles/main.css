@@ -473,10 +473,11 @@ td.selected {
 }
 
 #my-svg {
+    /*position: relative;*/
     display: none;
     width: 1000px;
     height: 1000px;
-    background-color: rgb(110, 180, 180);
+    /*background-color: rgb(110, 180, 180);*/
 }
 
 #cursor_coordy {
@@ -494,6 +495,7 @@ td.selected {
     font-size: var(--sgroesse);
     display: flex;
     align-items: center;
+    z-index: 100;
     /*justify-content: center;*/
 }
 
@@ -512,9 +514,18 @@ td.selected {
     font-size: var(--sgroesse);
     display: flex;
     align-items: center;
+    z-index: 100;
     /*justify-content: center;}*/
 }
 
-#circleBasicTooltip {
+#circleBasicTooltip, #circleTooltip_SM {
     position: absolute;
+    /*z-index: 110;*/
+}
+
+#dataviz_area {
+    position: relative;
+    top: -50px;
+    background-color: rgb(110, 180, 180);
+    /*z-index: 90;*/
 }
