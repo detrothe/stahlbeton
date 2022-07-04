@@ -232,8 +232,8 @@ export function systemlinien(node, truss, y_s: number, z_s: number, y_M: number,
             const svgBox = document.getElementById("my-svg");
             //let yp = Number(vec[0]) + 10 + svgBox.getBoundingClientRect().left;
             //let zp = Number(vec[1]) - 20 + svgBox.getBoundingClientRect().top;
-            const yp = event.pageX + 10;
-            const zp = event.pageY - 20;
+            const yp = ys + 10;
+            const zp = zs - 25;
             //console.log("vec", vec, vec[0], vec[1], yp, zp, event.pageX, event.pageY,"|",svgBox.getBoundingClientRect().left);
             return tooltip.style("top", zp + "px").style("left", yp + "px");
         })
@@ -269,8 +269,8 @@ export function systemlinien(node, truss, y_s: number, z_s: number, y_M: number,
             const svgBox = document.getElementById("my-svg");
             //let yp = Number(vec[0]) + 10 + svgBox.getBoundingClientRect().left;
             //let zp = Number(vec[1]) - 20 + svgBox.getBoundingClientRect().top;
-            const yp = event.pageX + 10;
-            const zp = event.pageY - 20;
+            const yp = yM + 10; //event.pageX + 10;
+            const zp = zM - 25; //event.pageY - 20;
             //console.log("vec", vec, vec[0], vec[1], yp, zp, event.pageX, event.pageY,"|",svgBox.getBoundingClientRect().left);
             return tooltip_SM.style("top", zp + "px").style("left", yp + "px");
         })

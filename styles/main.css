@@ -473,7 +473,7 @@ td.selected {
 }
 
 #my-svg {
-    /*position: relative;*/
+    position: relative;
     display: none;
     width: 1000px;
     height: 1000px;
@@ -482,7 +482,7 @@ td.selected {
 
 #cursor_coordy {
     /*display: inline-block;*/
-    position: relative;
+    position: absolute;
     top: 10px;
     left: 10px;
     width: 4em;
@@ -501,8 +501,8 @@ td.selected {
 
 #cursor_coordz {
     /*display: inline-block;*/
-    position: relative;
-    top: -15px;
+    position: absolute;
+    top: 10px;  /*-15*/
     left: calc(10px + 4em);
     width: 4em;
     height: 25px;
@@ -524,8 +524,8 @@ td.selected {
 }
 
 #dataviz_area {
-    position: relative;
-    top: -50px;
+    /*position: relative;*/
+    /*top: -50px;*/
     background-color: rgb(110, 180, 180);
     /*z-index: 90;*/
 }
