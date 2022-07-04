@@ -473,7 +473,7 @@ td.selected {
 }
 
 #my-svg {
-
+    display: none;
     width: 1000px;
     height: 1000px;
     background-color: rgb(110, 180, 180);

@@ -38,6 +38,7 @@ export function set_myScreen() {
         myScreen.svgWidth = myScreen.clientWidth;
     }
     document.getElementById("my-svg").style.width = myScreen.svgWidth + 'px';
+    document.getElementById("my-svg").style.height = myScreen.clientHeight + 'px';
 }
 
 export function tangens() {

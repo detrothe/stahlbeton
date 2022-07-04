@@ -27,7 +27,7 @@ class CTrans {
 
         console.log("dy,dz", this.dy, this.dz);
 
-        this.height = document.getElementById("my-svg").clientHeight - 1;
+        this.height = myScreen.clientHeight - 1; //  .getElementById("my-svg").clientHeight - 1;
         //this.width = document.getElementById("dataviz_area").clientWidth - 1;
         this.width = myScreen.svgWidth - 1;
 
@@ -70,4 +70,5 @@ class CTrans {
     }
 
 }
+
 export {CTrans};
