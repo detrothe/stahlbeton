@@ -70,8 +70,8 @@ dd.push(new test)
 export function tabulate(theDiv, id, data, columns) {
 //----------------------------------------------------------------------------------------------
 
-    console.log('columns', columns);
-    console.log("data", data);
+    //console.log('columns', columns);
+    //console.log("data", data);
 
     const table = d3.select(theDiv).append('table').style('border', 'solid').style('border-spacing', '0px').style('padding', "10px").attr("id", id).attr("class", "tabelle")
     const thead = table.append('thead')
@@ -99,7 +99,7 @@ export function tabulate(theDiv, id, data, columns) {
     const cells = rows.selectAll('td')
         .data(function (row) {
             return columns.map(function (column, spalte) {
-                console.log("function (column)", spalte, column, row[column]);
+                //console.log("function (column)", spalte, column, row[column]);
                 if (spalte === 0) {
                     return {column: column, value: zeile++};
                 } else {

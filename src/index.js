@@ -6,6 +6,7 @@ import {testeZahl, SDuennTruss, sichtbar} from "./utility.js";
 
 import DetectOS from './detectos.js'
 import {init_contextmenu} from './contextMenu.js';
+import {main_3D} from "./grafik_3D";
 
 //import {duennQuer} from "./duennQ";
 
@@ -114,6 +115,8 @@ export const app = {
 export const Detect = new DetectOS();
 
 init_contextmenu();
+
+main_3D();
 /*
 window.addEventListener('resize', reportWindowSize);
 
