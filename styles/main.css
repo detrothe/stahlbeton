@@ -43,7 +43,7 @@ body {
     grid-template-areas:
     'header header header header header'
     'topLeft topLeft topRight topRight topRight'
-    'left left middle middle right'
+    'left middle middle middle right'
     'unten_grafik unten_grafik unten_grafik unten_grafik unten_grafik'
     'footer footer footer footer footer';
     /* grid-column-gap: 10px; - if you want gap between the columns */
@@ -516,6 +516,11 @@ td.selected {
     align-items: center;
     z-index: 100;
     /*justify-content: center;}*/
+}
+#button_label_svg {
+    position: absolute;
+    top: 10px;  /*-15*/
+    left: calc(10px + 10em);
 }
 
 #circleBasicTooltip, #circleTooltip_SM {

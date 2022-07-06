@@ -1,39 +1,48 @@
 import * as d3 from "d3";
 
 import {CTrans} from './trans.js';
-import {nnodes, nelem} from "./duennQ"
+import {nnodes, nelem, node, truss} from "./duennQ"
 import {myScreen} from "./index";
+
+let svg = null;
+let tr = null;
+let label_visible = false;
 
 export function systemlinien(node, truss, y_s: number, z_s: number, y_M: number, z_M: number, phi: number) {
 
     let i: number, j: number;
     let ymin = 1.e30, zmin = 1.e30, ymax = -1.e30, zmax = -1.e30;
-    let slmax;
+    //let slmax;
     let str = "";
     let y1: number, y2: number, z1: number, z2: number, h: number, si: number, co: number
 
     const pts_y: number[] = Array(4);
     const pts_z: number[] = Array(4);
-/*
-    for (i = 0; i < nelem; i++) {
-        y1 = node[truss[i].nod[0]].y
-        z1 = node[truss[i].nod[0]].z
-        y2 = node[truss[i].nod[1]].y
-        z2 = node[truss[i].nod[1]].z
-        h = truss[i].dicke / 2.0
-        si = truss[i].sinus
-        co = truss[i].cosinus
 
-        pts_y[0] = y1 + si * h
-        pts_z[0] = z1 - co * h
-        pts_y[1] = y2 + si * h
-        pts_z[1] = z2 - co * h
-        pts_y[2] = y2 - si * h
-        pts_z[2] = z2 + co * h
-        pts_y[3] = y1 - si * h
-        pts_z[3] = z1 + co * h
+    if (svg !== null) {
+        svg = null;
+        console.log("svg=", svg)
     }
-*/
+    /*
+        for (i = 0; i < nelem; i++) {
+            y1 = node[truss[i].nod[0]].y
+            z1 = node[truss[i].nod[0]].z
+            y2 = node[truss[i].nod[1]].y
+            z2 = node[truss[i].nod[1]].z
+            h = truss[i].dicke / 2.0
+            si = truss[i].sinus
+            co = truss[i].cosinus
+
+            pts_y[0] = y1 + si * h
+            pts_z[0] = z1 - co * h
+            pts_y[1] = y2 + si * h
+            pts_z[1] = z2 - co * h
+            pts_y[2] = y2 - si * h
+            pts_z[2] = z2 + co * h
+            pts_y[3] = y1 - si * h
+            pts_z[3] = z1 + co * h
+        }
+    */
     for (i = 0; i < nnodes; i++) {
         //console.log(i, y[i], z[i]);
         if (node[i].y < ymin) ymin = node[i].y;
@@ -44,7 +53,11 @@ export function systemlinien(node, truss, y_s: number, z_s: number, y_M: number,
 
     console.log("MAX", ymin, ymax, zmin, zmax)
 
-    const tr = new CTrans(ymin, zmin, ymax, zmax);
+    if (tr === null) {
+        tr = new CTrans(ymin, zmin, ymax, zmax)
+    } else {
+        tr.init(ymin, zmin, ymax, zmax);
+    }
 
     for (let i = 0; i < nnodes; i++) {
         //str += y[i] + ',' + z[i] + ' ';
@@ -73,7 +86,7 @@ export function systemlinien(node, truss, y_s: number, z_s: number, y_M: number,
     document.getElementById("dataviz_area").setAttribute("width", myScreen.svgWidth + "px");
     document.getElementById("dataviz_area").setAttribute("height", myScreen.clientHeight + "px");
 
-    const svg = d3.select("#dataviz_area")
+    svg = d3.select("#dataviz_area")
 
         .on("mousemove", function (event) {
             const vec = d3.pointer(event);
@@ -97,12 +110,12 @@ export function systemlinien(node, truss, y_s: number, z_s: number, y_M: number,
     svg.selectAll("line").remove();
     svg.selectAll("polygon").remove();
     svg.selectAll("text").remove();
-/*
-    svg.append('polygon')
-        .attr('points', str)
-        .attr('stroke', "dimgrey")
-        .attr('fill', "lightgrey");
-*/
+    /*
+        svg.append('polygon')
+            .attr('points', str)
+            .attr('stroke', "dimgrey")
+            .attr('fill', "lightgrey");
+    */
     for (i = 0; i < nelem; i++) {
 
         str = ""
@@ -283,4 +296,57 @@ export function systemlinien(node, truss, y_s: number, z_s: number, y_M: number,
 //svg.selectAll("circle").remove(); // alles entfernen aus früheren Berechnungen
 
 
+}
+
+export function label_svg() {
+    let nod1: number, nod2: number, ym: number, zm: number;
+
+    //console.log("in label_svg")
+    if (svg !== null) {
+        //console.log("svg not null")
+        /*
+                svg.append("text")
+                    .attr("x", 100)
+                    .attr("y", 100)
+                    .html("test").style("font-size", 15)
+                    .style("fill", 'darkslategrey');
+        */
+        if (label_visible === false) {
+
+            label_visible = true
+
+            for (let i = 0; i < nnodes; i++) {
+
+                svg.append("text")
+                    .attr("x", tr.yPix(node[i].y) + 5)
+                    .attr("y", tr.zPix(node[i].z) - 10)
+                    .html(String(i + 1))
+                    .style("font-size", 15)
+                    .style("fill", 'darkslategrey')
+                    .attr("class", "label_node");
+
+            }
+
+            for (let i = 0; i < nelem; i++) {
+                nod1 = truss[i].nod[0];
+                nod2 = truss[i].nod[1];
+                ym = (node[nod1].y + node[nod2].y) / 2;
+                zm = (node[nod1].z + node[nod2].z) / 2;
+
+                svg.append("text")
+                    .attr("x", tr.yPix(ym) + 5)
+                    .attr("y", tr.zPix(zm) - 10)
+                    .html(String(i + 1))
+                    .style("font-size", 15)
+                    .style("fill", 'darkblue')
+                    .attr("class", "label_elem");
+
+            }
+        } else {
+            label_visible = false
+            svg.selectAll(".label_node").remove();
+            svg.selectAll(".label_elem").remove();
+        }
+
+    }
 }

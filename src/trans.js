@@ -1,7 +1,11 @@
 import {myScreen} from "./index";
 
 class CTrans {
-    constructor(ymin, zmin, ymax, zmax) {
+    constructor(ymin = 0.0, zmin = 0.0, ymax = 1.0, zmax = 1.0) {
+        this.init(ymin, zmin, ymax, zmax)
+    }
+
+    init(ymin, zmin, ymax, zmax) {
 
         let dy, dz;
 

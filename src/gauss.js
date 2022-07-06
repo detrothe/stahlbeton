@@ -9,7 +9,7 @@ export function gauss(n, a, b) {
     let i, mem, iz, k, j;
     let c, aji;
 
-    console.log("in GAUSS");
+    //console.log("in GAUSS");
 
 //                   calculate solution vector b
 
@@ -45,7 +45,7 @@ export function gauss(n, a, b) {
 
         for (j = i + 1; j < n; j++) {
             aji = a[j][i] / a[i][i];
-            console.log("aji : ", aji);
+            //console.log("aji : ", aji);
             for (k = i; k < n; k++)
                 a[j][k] = a[j][k] - a[i][k] * aji;
 //           a[j][i] = aji;
@@ -88,7 +88,7 @@ export function gauss(n, a, b) {
 
 }
 
-
+/*
 export function test_main() {
 
     let a = [];
@@ -98,13 +98,6 @@ export function test_main() {
     a[3] = [22.0, 25.0, 28.0, -31.0, 34.0];
     a[4] = [28.0, -31.0, -34.0, 37.0, -40.0];
 
-    /*
-            {25.0, 7.0, 10.0, 13.0, - 16.0,
-            10.0, 13.0, 16.0, 19.0, 22.0,
-            16.0, 19.0, -22.0, 25.0, 28.0,
-            22.0, 25.0, 28.0, -31.0, 34.0,
-            28.0, -31.0, -34.0, 37.0, -40.0
-    */
 
     let b = [1.0, 2.0, 3.0, 4.0, 5.0];
     let n = 5;
@@ -126,3 +119,4 @@ export function test_main() {
         console.log("b" + i + " = " + b[i]);
     }
 }
+*/

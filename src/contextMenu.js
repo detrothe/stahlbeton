@@ -156,7 +156,7 @@ function clickListener() {
  * Listens for keyup events.
  */
 function keyupListener() {
-    console.log("keyupListener", keyupListener);
+    //console.log("keyupListener", keyupListener);
 
     window.onkeyup = function (e) {
         //console.log("keyupListener",e.code, e.key,e);   // geht auch
@@ -254,7 +254,7 @@ function positionMenu(e) {
  * @param {HTMLElement} link The link that was clicked
  */
 function menuItemListener(link) {
-    console.log("LINK", link)
+    //console.log("LINK", link)
     //console.log("Task ID - " + taskItemInContext.getAttribute("data-id") + ", Task action - " + link.getAttribute("data-action"));
     toggleMenuOff();
 

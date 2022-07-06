@@ -3,7 +3,7 @@ import './dateien.js';
 import {gauss} from "./gauss.js"
 import {testeZahl, sichtbar, testNumber} from './utility.js';
 import {resizeTable, clear_Tabelle} from "./duennQ_tabelle.js";
-import {systemlinien} from "./systemlinien";
+import {systemlinien,label_svg} from "./systemlinien";
 import {set_myScreen} from "./index.js"
 /*
 class test {
@@ -32,6 +32,7 @@ btn2.addEventListener('click', resizeTable);
 const btn3 = document.getElementById("clearTable");
 btn3.addEventListener('click', clear_Tabelle);
 
+document.getElementById('button_label_svg').addEventListener('click', label_svg, false);
 
 //------------------------------------------------------------------------------------------------
 
@@ -43,6 +44,10 @@ export function duennQuer() {
 
 // @ts-ignore
 window.duennQuer = duennQuer;   // jetzt auch in html sichtbar
+
+
+export let node = []
+export let truss = []
 
 class TNode {
     y: number = 1.0
@@ -236,8 +241,8 @@ export function set_nelem(n: number) {
 export function duennQ() {
 //----------------------------------------------------------------------------------------------
 
-    let node = []
-    let truss = []
+    //let node = []
+    //let truss = []
 
 
     let i: number, neq: number
@@ -291,6 +296,8 @@ export function duennQ() {
     input = document.getElementById('fyRd') as HTMLInputElement | null;
     fyRd = Number(testeZahl(input.value));
 
+    while ( node.length > 0 ) node.pop();
+    while ( truss.length > 0 ) truss.pop();
 
     for (i = 0; i < nnodes; i++) {
         node.push(new TNode())
@@ -556,9 +563,9 @@ export function duennQ() {
 
     for (i = 0; i < neq; i++) u[i] = R[i];
 
-    for (i = 0; i < neq; i++) {       // Ausgabe der Verformungen mit interner Nummerierung
-        console.log("u", i, u[i])
-    }
+    //for (i = 0; i < neq; i++) {       // Ausgabe der Verformungen mit interner Nummerierung
+    //    console.log("u", i, u[i])
+    //}
 
     for (i = 0; i < nnodes; i++) {     // Ausgabe der Verschiebungen der einzelnen Knoten
         ieq = node[i].Lx;
@@ -1165,3 +1172,4 @@ export function duennQ() {
     systemlinien(node, truss, Gesamt_ys, Gesamt_zs, yM, zM, phi0 );
 
 }
+
