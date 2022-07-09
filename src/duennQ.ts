@@ -1172,7 +1172,7 @@ export function duennQ() {
 
     systemlinien(node, truss, Gesamt_ys, Gesamt_zs, yM, zM, phi0 );
 
-    draw_elements();
+    draw_elements(Gesamt_ys, Gesamt_zs, yM, zM, phi0 );
 
 }
 

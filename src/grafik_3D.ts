@@ -5,6 +5,7 @@ import {OrbitControls} from './OrbitControls.js';
 
 import {nnodes, nelem, node, truss} from "./duennQ"
 import {ymin,ymax,zmin,zmax} from "./systemlinien";
+import {myScreen} from "./index.js";
 
 /*
 export function main_3D() {
@@ -58,8 +59,12 @@ let scene = null
 
 
 export function main_3D() {
+    console.log("main_3D")
+
     const canvas = document.getElementById('c3') as HTMLCanvasElement  //.querySelector('#c3');
-    canvas.height = 300
+    let leng = Math.min(myScreen.svgWidth, myScreen.clientHeight)
+    canvas.height = leng
+    canvas.width = leng
     const renderer = new THREE.WebGLRenderer({canvas, antialias: true});
 
     console.log("canvas",canvas.clientWidth, canvas.clientHeight)
@@ -229,7 +234,7 @@ export function add_element() {
 
 }
 
-export function draw_elements() {
+export function draw_elements(y_s: number, z_s: number, y_M: number, z_M: number, phi: number) {
 
     let y1: number, y2: number, x1: number, x2: number
 
@@ -242,7 +247,15 @@ export function draw_elements() {
         //create a blue LineBasicMaterial
         const material_line = new THREE.LineBasicMaterial({
             color: 0x0000ff,
-            linewidth: 2
+            linewidth: 4
+        });
+        const material_line_blue = new THREE.LineBasicMaterial({
+            color: 0x0000ff,
+            linewidth: 4
+        });
+        const material_line_green = new THREE.LineBasicMaterial({
+            color: 0x00ff00,
+            linewidth: 4
         });
 
         for ( let i=0; i<nelem;i++ ) {
@@ -297,6 +310,56 @@ export function draw_elements() {
         scene.add(mesh);
 
  */
+
+        const pointsx = [];
+        pointsx.push(new THREE.Vector3(-y_s, -z_s, 10));
+        pointsx.push(new THREE.Vector3(-y_s, -z_s, 20));
+
+        let geometry_line = new THREE.BufferGeometry().setFromPoints(pointsx);
+
+        material_line.setValues({color: 0xff0000});
+        const line = new THREE.Line(geometry_line, material_line);
+        scene.add(line);
+
+        const pointsy = [];      // y-Achse
+        pointsy.push(new THREE.Vector3(-y_s, -z_s, 10));
+        pointsy.push(new THREE.Vector3(-y_s-10, -z_s, 10));
+
+        geometry_line = new THREE.BufferGeometry().setFromPoints(pointsy);
+
+        //const line = new THREE.Line(geometry_line, material_line);
+        scene.add(new THREE.Line(geometry_line, material_line_green));
+
+        const pointsz = [];      // z-Achse
+        pointsz.push(new THREE.Vector3(-y_s, -z_s, 10));
+        pointsz.push(new THREE.Vector3(-y_s, -z_s-10, 10));
+
+        geometry_line = new THREE.BufferGeometry().setFromPoints(pointsz);
+
+        scene.add(new THREE.Line(geometry_line, material_line_blue));
+
+        const geometry = new THREE.ConeGeometry( 1.2, 4, 16 );   // x-Achse
+
+        let material = new THREE.MeshPhongMaterial( {color: 0xff0000} );
+        let cone = new THREE.Mesh( geometry, material );
+        cone.rotateX(1.570795)
+        cone.position.set(-y_s, -z_s, 20)
+        scene.add( cone );
+
+//        const geometry = new THREE.ConeGeometry( 2, 5, 16 );   // y-Achse
+
+        material = new THREE.MeshPhongMaterial( {color: 0x00ff00} );
+        cone = new THREE.Mesh( geometry, material );
+        cone.rotateZ(1.570795)
+        cone.position.set(-y_s-10, -z_s, 10)
+        scene.add( cone );
+
+        material = new THREE.MeshPhongMaterial( {color: 0x0000ff} );     // z-Achse
+        cone = new THREE.Mesh( geometry, material );
+        cone.rotateX(3.14159)
+        cone.position.set(-y_s, -z_s-10, 10)
+        scene.add( cone );
+
         window.dispatchEvent(new Event("resize"));
     }
 
