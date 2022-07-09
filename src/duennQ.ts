@@ -5,6 +5,7 @@ import {testeZahl, sichtbar, testNumber} from './utility.js';
 import {resizeTable, clear_Tabelle} from "./duennQ_tabelle.js";
 import {systemlinien,label_svg} from "./systemlinien";
 import {set_myScreen} from "./index.js"
+import {draw_elements} from "./grafik_3D";
 /*
 class test {
     index = 0;
@@ -1170,6 +1171,8 @@ export function duennQ() {
     }
 
     systemlinien(node, truss, Gesamt_ys, Gesamt_zs, yM, zM, phi0 );
+
+    draw_elements();
 
 }
 

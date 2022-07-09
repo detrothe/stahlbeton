@@ -6,7 +6,10 @@ import {testeZahl, SDuennTruss, sichtbar} from "./utility.js";
 
 import DetectOS from './detectos.js'
 import {init_contextmenu} from './contextMenu.js';
-import {main_3D} from "./grafik_3D";
+
+//import {C_3D} from './trans'
+
+import {add_element, main_3D} from "./grafik_3D";
 
 //import {duennQuer} from "./duennQ";
 
@@ -117,6 +120,10 @@ export const Detect = new DetectOS();
 init_contextmenu();
 
 main_3D();
+add_element();
+
+//let obj = new C_3D()
+
 /*
 window.addEventListener('resize', reportWindowSize);
 

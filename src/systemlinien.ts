@@ -7,11 +7,11 @@ import {myScreen} from "./index";
 let svg = null;
 let tr = null;
 let label_visible = false;
+export let ymin = -50.0, zmin = -50.0, ymax = 50.0, zmax = 50.0;
 
 export function systemlinien(node, truss, y_s: number, z_s: number, y_M: number, z_M: number, phi: number) {
 
     let i: number, j: number;
-    let ymin = 1.e30, zmin = 1.e30, ymax = -1.e30, zmax = -1.e30;
     //let slmax;
     let str = "";
     let y1: number, y2: number, z1: number, z2: number, h: number, si: number, co: number
@@ -43,6 +43,11 @@ export function systemlinien(node, truss, y_s: number, z_s: number, y_M: number,
             pts_z[3] = z1 + co * h
         }
     */
+    ymin = 1.e30
+    zmin = 1.e30
+    ymax = -1.e30
+    zmax = -1.e30
+
     for (i = 0; i < nnodes; i++) {
         //console.log(i, y[i], z[i]);
         if (node[i].y < ymin) ymin = node[i].y;
@@ -229,7 +234,7 @@ export function systemlinien(node, truss, y_s: number, z_s: number, y_M: number,
         .style("width", 20)
         .text("Schwerpunkt");
 
-    console.log("--tooltip--", tooltip.text);
+    //console.log("--tooltip--", tooltip.text);
 
     d3.select("#circleBasicTooltip")
         .on("mouseover", function () {
