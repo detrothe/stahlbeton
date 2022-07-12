@@ -542,3 +542,40 @@ td.selected {
     background-color: rgb(110, 180, 180);
     /*z-index: 90;*/
 }
+#button_label_webgl {
+    position: absolute;
+    top: 10px;  /*-15*/
+    left: 10px;
+    z-index: 90;
+}
+
+#my-webgl {
+    position: relative;
+    /*display: none;
+    width: 1000px;
+    height: 1000px;
+
+     */
+    /*background-color: rgb(110, 180, 180);*/
+}
+
+#label_x_achse,
+#label_y_achse,
+#label_z_achse {
+    position: absolute;
+    top: 100px;
+    left: 100px;
+    width: 100%;
+    text-align: left;
+    z-index: 100;
+    display:block;
+    color: #8b0000;
+}
+.emotionLabel {
+    color: #ff0000;
+    /* font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif; */
+    margin: -5px 0 0 15px;
+    /*pointer-events: none;*/
+    font-size: 1rem;
+    z-index: 120;
+}

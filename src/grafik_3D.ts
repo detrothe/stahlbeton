@@ -4,8 +4,9 @@ import * as THREE from 'three';
 import {OrbitControls} from './OrbitControls.js';
 
 import {nnodes, nelem, node, truss} from "./duennQ"
-import {ymin,ymax,zmin,zmax} from "./systemlinien";
+import {ymin, ymax, zmin, zmax} from "./systemlinien";
 import {myScreen} from "./index.js";
+import {CSS2DObject, CSS2DRenderer} from "./renderers/CSS2DRenderer.js"
 
 /*
 export function main_3D() {
@@ -61,28 +62,40 @@ let scene = null
 export function main_3D() {
     console.log("main_3D")
 
+    const container = document.getElementById("my-webgl");
     const canvas = document.getElementById('c3') as HTMLCanvasElement  //.querySelector('#c3');
     let leng = Math.min(myScreen.svgWidth, myScreen.clientHeight)
     canvas.height = leng
     canvas.width = leng
-    const renderer = new THREE.WebGLRenderer({canvas, antialias: true});
 
-    console.log("canvas",canvas.clientWidth, canvas.clientHeight)
+    const renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});  // canvas,
+    renderer.setSize(leng, leng);
+    container.appendChild(renderer.domElement);
+    console.log("renderer.domElement", renderer.domElement)
 
-    const fov = 50;
-    const aspect = 2;  // the canvas default
-    const near = 0.1;
-    const far = 50;
-    //const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+    const labelRenderer = new CSS2DRenderer();  // {element:canvas}
+    labelRenderer.setSize(leng, leng);
+    labelRenderer.domElement.style.position = 'absolute';
+    labelRenderer.domElement.style.top = '0px';
+    console.log("labelRenderer.domElement", labelRenderer.domElement)
+    container.appendChild(labelRenderer.domElement);
 
+    console.log("canvas", canvas.clientWidth, canvas.clientHeight)
+    /*
+        const fov = 50;
+        const aspect = 2;  // the canvas default
+        const near = 0.1;
+        const far = 500;
+        const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+    */
     const width = 100;
     const height = 100;
-    console.log("ortho",-ymax,-ymin,-zmax,-zmin)
-    const camera = new THREE.OrthographicCamera( -ymax,-ymin,-zmin,-zmax, -2000, 2000 );
-
+    console.log("ortho", -ymax, -ymin, -zmax, -zmin)
+    const camera = new THREE.OrthographicCamera(-ymax, -ymin, -zmin, -zmax, -2000, 2000);
+    camera.layers.enableAll();
     camera.position.z = 500;
 
-    const controls = new OrbitControls(camera, canvas);
+    const controls = new OrbitControls(camera, labelRenderer.domElement); //canvas);    labelRenderer.domElement
     controls.enableDamping = true;
     controls.target.set(0, 0, 0);
     controls.update();
@@ -98,8 +111,8 @@ export function main_3D() {
         scene.add(light);
 
 
-        const light1 = new THREE.AmbientLight( 0x404040 ); // soft white light
-        scene.add( light1 );
+        const light1 = new THREE.AmbientLight(0x404040); // soft white light
+        scene.add(light1);
     }
 
     const boxWidth = 1;
@@ -172,6 +185,7 @@ export function main_3D() {
 
         controls.update();
         renderer.render(scene, camera);
+        labelRenderer.render(scene, camera);
     }
 
     render();
@@ -236,13 +250,13 @@ export function add_element() {
 
 export function draw_elements(y_s: number, z_s: number, y_M: number, z_M: number, phi: number) {
 
-    let y1: number, y2: number, x1: number, x2: number
+    let y1: number, y2: number, x1: number, x2: number, xm: number, ym: number
 
     while (scene.children.length > 2) {  // Licht soll bleiben
         removeObject3D(scene.children[scene.children.length - 1])
     }
 
-    if ( scene !== null ) {
+    if (scene !== null) {
 
         //create a blue LineBasicMaterial
         const material_line = new THREE.LineBasicMaterial({
@@ -258,58 +272,112 @@ export function draw_elements(y_s: number, z_s: number, y_M: number, z_M: number
             linewidth: 4
         });
 
-        for ( let i=0; i<nelem;i++ ) {
+        for (let i = 0; i < nelem; i++) {
             console.log("elem i=", i)
-            // x1 = -node[truss[i].nod[0]].y
-            // y1 = -node[truss[i].nod[0]].z
-            // x2 = -node[truss[i].nod[1]].y
-            // y2 = -node[truss[i].nod[1]].z
-/*
-            const points = [];
-            points.push(new THREE.Vector3(x1, y1, 0));
-            points.push(new THREE.Vector3(x2, y2, 0));
+            x1 = -node[truss[i].nod[0]].y
+            y1 = -node[truss[i].nod[0]].z
+            x2 = -node[truss[i].nod[1]].y
+            y2 = -node[truss[i].nod[1]].z
+            xm = (x1 + x2) / 2
+            ym = (y1 + y2) / 2
+            /*
+                        const points = [];
+                        points.push(new THREE.Vector3(x1, y1, 0));
+                        points.push(new THREE.Vector3(x2, y2, 0));
 
-            const geometry_line = new THREE.BufferGeometry().setFromPoints(points);
+                        const geometry_line = new THREE.BufferGeometry().setFromPoints(points);
 
-            const line = new THREE.Line(geometry_line, material_line);
-            scene.add(line);
-*/
+                        const line = new THREE.Line(geometry_line, material_line);
+                        scene.add(line);
+            */
 
             const elemShape = new THREE.Shape();
-            elemShape.moveTo( -truss[i].pts_y[0], -truss[i].pts_z[0] );
-            elemShape.lineTo( -truss[i].pts_y[1], -truss[i].pts_z[1] );
-            elemShape.lineTo( -truss[i].pts_y[2], -truss[i].pts_z[2] );
-            elemShape.lineTo( -truss[i].pts_y[3], -truss[i].pts_z[3] );
-            elemShape.lineTo( -truss[i].pts_y[0], -truss[i].pts_z[0] );
+            elemShape.moveTo(-truss[i].pts_y[0], -truss[i].pts_z[0]);
+            elemShape.lineTo(-truss[i].pts_y[1], -truss[i].pts_z[1]);
+            elemShape.lineTo(-truss[i].pts_y[2], -truss[i].pts_z[2]);
+            elemShape.lineTo(-truss[i].pts_y[3], -truss[i].pts_z[3]);
+            elemShape.lineTo(-truss[i].pts_y[0], -truss[i].pts_z[0]);
 
 
-            const extrudeSettings = { depth: 8, bevelEnabled: true, bevelSegments: 5, steps: 1, bevelSize: 1, bevelThickness: 1 };
+            const extrudeSettings = {
+                depth: 0,
+                bevelEnabled: false,
+                bevelSegments: 5,
+                steps: 1,
+                bevelSize: 1,
+                bevelThickness: 1
+            };
 
-            const geometry = new THREE.ExtrudeGeometry( elemShape, extrudeSettings );
+            const geometry = new THREE.ExtrudeGeometry(elemShape, extrudeSettings);
 
-            const mesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial() );
+            const mesh = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial());
+
             scene.add(mesh);
 
+            //let label = document.getElementById('label_x_achse') //as HTMLCanvasElement;
+            //txt.style.left = '200px'
+            let nameDiv = document.createElement("div");
+            nameDiv.className = "emotionLabel";
+            nameDiv.textContent = String(i + 1);
+            console.log("nameDiv", nameDiv)
+            const xLabel = new CSS2DObject(nameDiv);
+            xLabel.position.set(xm, ym, 0);
+            xLabel.layers.set(1)
+            console.log("xLabel", xLabel)
+            mesh.add(xLabel);
+            xLabel.layers.set(1);
+
         }
-/*
-        const heartShape = new THREE.Shape();
 
-        heartShape.moveTo( 25, 25 );
-        heartShape.bezierCurveTo( 25, 25, 20, 0, 0, 0 );
-        heartShape.bezierCurveTo( - 30, 0, - 30, 35, - 30, 35 );
-        heartShape.bezierCurveTo( - 30, 55, - 10, 77, 25, 95 );
-        heartShape.bezierCurveTo( 60, 77, 80, 55, 80, 35 );
-        heartShape.bezierCurveTo( 80, 35, 80, 0, 50, 0 );
-        heartShape.bezierCurveTo( 35, 0, 25, 25, 25, 25 );
 
-        const extrudeSettings = { depth: 8, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 1, bevelThickness: 1 };
+        const polyShape = new THREE.Shape()
+            .moveTo( 0, 0 )
+            .lineTo( 40, 0 )
+            .lineTo( 40, 30 )
+            .lineTo( 0, 20 )
+            .lineTo( 0, 0 ); // close path
 
-        const geometry = new THREE.ExtrudeGeometry( heartShape, extrudeSettings );
+        const geometry_poly = new THREE.ShapeGeometry(polyShape);
+        scene.add(new THREE.Mesh(geometry_poly, new THREE.MeshBasicMaterial({color: 'red'})))
 
-        const mesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial() );
-        scene.add(mesh);
+        const geometry1 = new THREE.BufferGeometry();
+// create a simple square shape. We duplicate the top left and bottom right
+// vertices because each vertex needs to appear once per triangle.
+        const vertices = new Float32Array( [
+            -1.0, -1.0,  1.0,
+            1.0, -1.0,  1.0,
+            1.0,  1.0,  3.0,
 
- */
+            1.0,  1.0,  1.0,
+            -1.0,  1.0,  1.0,
+            -1.0, -1.0,  1.0
+        ] );
+
+// itemSize = 3 because there are 3 values (components) per vertex
+        geometry1.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+        const material1 = new THREE.MeshBasicMaterial( { color: 'darkgrey', opacity: 0.5, transparent: true , side: THREE.DoubleSide }  )
+        const mesh1 = new THREE.Mesh( geometry1, material1 );
+        scene.add(mesh1);
+
+        /*
+                const heartShape = new THREE.Shape();
+
+                heartShape.moveTo( 25, 25 );
+                heartShape.bezierCurveTo( 25, 25, 20, 0, 0, 0 );
+                heartShape.bezierCurveTo( - 30, 0, - 30, 35, - 30, 35 );
+                heartShape.bezierCurveTo( - 30, 55, - 10, 77, 25, 95 );
+                heartShape.bezierCurveTo( 60, 77, 80, 55, 80, 35 );
+                heartShape.bezierCurveTo( 80, 35, 80, 0, 50, 0 );
+                heartShape.bezierCurveTo( 35, 0, 25, 25, 25, 25 );
+
+                const extrudeSettings = { depth: 8, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 1, bevelThickness: 1 };
+
+                const geometry = new THREE.ExtrudeGeometry( heartShape, extrudeSettings );
+
+                const mesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial() );
+                scene.add(mesh);
+
+         */
 
         const pointsx = [];
         pointsx.push(new THREE.Vector3(-y_s, -z_s, 10));
@@ -323,7 +391,7 @@ export function draw_elements(y_s: number, z_s: number, y_M: number, z_M: number
 
         const pointsy = [];      // y-Achse
         pointsy.push(new THREE.Vector3(-y_s, -z_s, 10));
-        pointsy.push(new THREE.Vector3(-y_s-10, -z_s, 10));
+        pointsy.push(new THREE.Vector3(-y_s - 10, -z_s, 10));
 
         geometry_line = new THREE.BufferGeometry().setFromPoints(pointsy);
 
@@ -332,33 +400,34 @@ export function draw_elements(y_s: number, z_s: number, y_M: number, z_M: number
 
         const pointsz = [];      // z-Achse
         pointsz.push(new THREE.Vector3(-y_s, -z_s, 10));
-        pointsz.push(new THREE.Vector3(-y_s, -z_s-10, 10));
+        pointsz.push(new THREE.Vector3(-y_s, -z_s - 10, 10));
 
         geometry_line = new THREE.BufferGeometry().setFromPoints(pointsz);
 
         scene.add(new THREE.Line(geometry_line, material_line_blue));
 
-        const geometry = new THREE.ConeGeometry( 1.2, 4, 16 );   // x-Achse
+        const geometry = new THREE.ConeGeometry(1.2, 4, 16);   // x-Achse
 
-        let material = new THREE.MeshPhongMaterial( {color: 0xff0000} );
-        let cone = new THREE.Mesh( geometry, material );
+        let material = new THREE.MeshPhongMaterial({color: 0xff0000});
+        let cone = new THREE.Mesh(geometry, material);
         cone.rotateX(1.570795)
         cone.position.set(-y_s, -z_s, 20)
-        scene.add( cone );
+        scene.add(cone);
 
 //        const geometry = new THREE.ConeGeometry( 2, 5, 16 );   // y-Achse
 
-        material = new THREE.MeshPhongMaterial( {color: 0x00ff00} );
-        cone = new THREE.Mesh( geometry, material );
+        material = new THREE.MeshPhongMaterial({color: 0x00ff00});
+        cone = new THREE.Mesh(geometry, material);
         cone.rotateZ(1.570795)
-        cone.position.set(-y_s-10, -z_s, 10)
-        scene.add( cone );
+        cone.position.set(-y_s - 10, -z_s, 10)
+        scene.add(cone);
 
-        material = new THREE.MeshPhongMaterial( {color: 0x0000ff} );     // z-Achse
-        cone = new THREE.Mesh( geometry, material );
+        material = new THREE.MeshPhongMaterial({color: 0x0000ff});     // z-Achse
+        cone = new THREE.Mesh(geometry, material);
         cone.rotateX(3.14159)
-        cone.position.set(-y_s, -z_s-10, 10)
-        scene.add( cone );
+        cone.position.set(-y_s, -z_s - 10, 10)
+        scene.add(cone);
+
 
         window.dispatchEvent(new Event("resize"));
     }
