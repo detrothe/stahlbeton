@@ -338,7 +338,7 @@ export function draw_elements(y_s: number, z_s: number, y_M: number, z_M: number
             .lineTo( 0, 0 ); // close path
 
         const geometry_poly = new THREE.ShapeGeometry(polyShape);
-        scene.add(new THREE.Mesh(geometry_poly, new THREE.MeshBasicMaterial({color: 'red'})))
+        scene.add(new THREE.Mesh(geometry_poly, new THREE.MeshBasicMaterial({color: 'red', opacity: 0.5, transparent: true , side: THREE.DoubleSide })))
 
         const geometry1 = new THREE.BufferGeometry();
 // create a simple square shape. We duplicate the top left and bottom right
