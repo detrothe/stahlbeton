@@ -49,13 +49,15 @@ window.duennQuer = duennQuer;   // jetzt auch in html sichtbar
 
 export let node = []
 export let truss = []
+export let I_omega: number
+
 
 class TNode {
     y: number = 1.0
     z: number = 1.0
     yh: number = 1.0                                // entspricht Koordinate in Hauptrichtung 1 (eta), Ursprung liegt im Schwerpunkt
     zh: number = 1.0                                // entspricht Koordinate in Hauptrichtung 2 (ksi)
-    omega: number = 1.0
+    omega: number = 0.0
     Lx: number = 0                                  // Lagerbedingung  bei Eingabe: 0=frei, 1=fest, später enthält L() die Gleichungsnummern
 }
 
@@ -150,8 +152,8 @@ for (let i = 1; i <= nelem; i++) {
     elemObj.elemArray.push(punkt);
 }
 
-const xx = [0.0, 20.0, 40, 20.0];
-const yy = [0.0, 0.0, 0.0, 40.0];
+const xx = [0.0, 20.0, 40.0, 20.0,40.0,0.0];
+const yy = [0.0, 0.0, 0.0, 40.0,40.0, 40.0];
 
 // @ts-ignore
 tabulate('#knotentabelle', 'nodeTable', nodeObj.nodeArray, ['No', 'y [cm]', 'z [cm]']);
@@ -225,6 +227,10 @@ eTabelle.rows[2].cells[4].innerText = "2";
 eTabelle.rows[2].cells[5].innerText = "3";
 eTabelle.rows[3].cells[4].innerText = "2";
 eTabelle.rows[3].cells[5].innerText = "4";
+eTabelle.rows[4].cells[4].innerText = "5";
+eTabelle.rows[4].cells[5].innerText = "4";
+eTabelle.rows[5].cells[4].innerText = "4";
+eTabelle.rows[5].cells[5].innerText = "6";
 
 //----------------------------------------------------------------------------------------------
 export function set_nnodes(n: number) {
@@ -254,7 +260,7 @@ export function duennQ() {
     let Hebely: number, Hebelz: number;
     let iP2: number, iM2: number;
     let fact: number, A_omegaQ: number, A_yOmegaQ: number, A_zOmegaQ: number, rOmega: number, dOmega: number;
-    let I_omega: number, It_geschlossen: number, omega_m: number, area: number;
+    let  It_geschlossen: number, omega_m: number, area: number;
     let rt: number, ry: number, rz: number, y_m: number, z_m: number;
 
     let Gesamtflaeche: number, I11: number, I22: number, phi0: number,

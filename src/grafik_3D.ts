@@ -3,8 +3,8 @@ import * as THREE from 'three';
 
 import {OrbitControls} from './OrbitControls.js';
 
-import {nnodes, nelem, node, truss} from "./duennQ"
-import {ymin, ymax, zmin, zmax} from "./systemlinien";
+import {nnodes, nelem, node, truss, I_omega} from "./duennQ"
+import {ymin, ymax, zmin, zmax, slmax} from "./systemlinien";
 import {myScreen} from "./index.js";
 import {CSS2DObject, CSS2DRenderer} from "./renderers/CSS2DRenderer.js"
 
@@ -55,6 +55,8 @@ export function main_3D() {
 }
 */
 
+export let maxWoelb: number;
+
 //let canvas
 let scene = null
 
@@ -71,16 +73,16 @@ export function main_3D() {
     const renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});  // canvas,
     renderer.setSize(leng, leng);
     container.appendChild(renderer.domElement);
-    console.log("renderer.domElement", renderer.domElement)
+    //console.log("renderer.domElement", renderer.domElement)
 
     const labelRenderer = new CSS2DRenderer();  // {element:canvas}
     labelRenderer.setSize(leng, leng);
     labelRenderer.domElement.style.position = 'absolute';
     labelRenderer.domElement.style.top = '0px';
-    console.log("labelRenderer.domElement", labelRenderer.domElement)
+    //console.log("labelRenderer.domElement", labelRenderer.domElement)
     container.appendChild(labelRenderer.domElement);
 
-    console.log("canvas", canvas.clientWidth, canvas.clientHeight)
+    //console.log("canvas", canvas.clientWidth, canvas.clientHeight)
     /*
         const fov = 50;
         const aspect = 2;  // the canvas default
@@ -90,12 +92,12 @@ export function main_3D() {
     */
     const width = 100;
     const height = 100;
-    console.log("ortho", -ymax, -ymin, -zmax, -zmin)
+    //console.log("ortho", -ymax, -ymin, -zmax, -zmin)
     const camera = new THREE.OrthographicCamera(-ymax, -ymin, -zmin, -zmax, -2000, 2000);
     camera.layers.enableAll();
     camera.position.z = 500;
 
-    const controls = new OrbitControls(camera, labelRenderer.domElement); //canvas);    labelRenderer.domElement
+    const controls = new OrbitControls(camera, labelRenderer.domElement);
     controls.enableDamping = true;
     controls.target.set(0, 0, 0);
     controls.update();
@@ -201,7 +203,10 @@ export function main_3D() {
     window.addEventListener('resize', requestRenderIfNotRequested);
 }
 
+//--------------------------------------------------------------------------------------------------------
 function removeObject3D(object: THREE.Mesh | THREE.Line) {
+//--------------------------------------------------------------------------------------------------------
+
     if (!(object instanceof THREE.Object3D)) return false;
     // for better memory management and performance
     if (object.geometry) {
@@ -248,7 +253,9 @@ export function add_element() {
 
 }
 
+//--------------------------------------------------------------------------------------------------------
 export function draw_elements(y_s: number, z_s: number, y_M: number, z_M: number, phi: number) {
+//--------------------------------------------------------------------------------------------------------
 
     let y1: number, y2: number, x1: number, x2: number, xm: number, ym: number
 
@@ -263,12 +270,16 @@ export function draw_elements(y_s: number, z_s: number, y_M: number, z_M: number
 
     const elemente = document.querySelectorAll('.emotionLabel');  // entferne html Texte
 
-    elemente.forEach( el => {
+    elemente.forEach(el => {
         el.remove();
     });
 
     if (scene !== null) {
 
+        maxWoelb = 0.0
+        for (let i = 0; i < nnodes; i++) {
+            maxWoelb = Math.max(Math.abs(node[i].omega), maxWoelb)
+        }
         //create a blue LineBasicMaterial
         const material_line = new THREE.LineBasicMaterial({
             color: 0x0000ff,
@@ -284,7 +295,7 @@ export function draw_elements(y_s: number, z_s: number, y_M: number, z_M: number
         });
 
         for (let i = 0; i < nelem; i++) {
-            console.log("elem i=", i)
+            //console.log("elem i=", i)
             x1 = -node[truss[i].nod[0]].y
             y1 = -node[truss[i].nod[0]].z
             x2 = -node[truss[i].nod[1]].y
@@ -342,34 +353,105 @@ export function draw_elements(y_s: number, z_s: number, y_M: number, z_M: number
         }
 
 
+        if ((Math.abs(maxWoelb) > 0.0000000000001) && (I_omega > 0.0000000000001)) {
+            let Ueberhoehung = 0.1 * slmax / maxWoelb // * scf // Skalieren der Wölblinien
+            console.log("Verwölbung",maxWoelb,Ueberhoehung)
+
+            let j = 0, nod1:number, nod2: number, omega1:number, omega2:number
+            for (let i = 0; i < nelem; i++) {
+                const vertices = new Float32Array(3*6);
+                nod1 = truss[i].nod[0];
+                nod2 = truss[i].nod[1];
+                x1 = -node[nod1].y
+                y1 = -node[nod1].z
+                x2 = -node[nod2].y
+                y2 = -node[nod2].z
+                omega1 = node[nod1].omega
+                omega2 = node[nod2].omega
+
+                j = 0
+                vertices[0+j] = x1 ;vertices[1+j] = y1 ;vertices[2+j] = 0.0 ;
+                j+=3
+                vertices[0+j] = x2 ;vertices[1+j] = y2 ;vertices[2+j] = 0.0 ;
+                j+=3
+                vertices[0+j] = x2 ;vertices[1+j] = y2 ;vertices[2+j] = omega2*Ueberhoehung ;
+
+                j+=3
+                vertices[0+j] = x2 ;vertices[1+j] = y2 ;vertices[2+j] = omega2*Ueberhoehung ;
+                j+=3
+                vertices[0+j] = x1 ;vertices[1+j] = y1 ;vertices[2+j] = omega1*Ueberhoehung ;
+                j+=3
+                vertices[0+j] = x1 ;vertices[1+j] = y1 ;vertices[2+j] = 0.0 ;
+
+                const geometry1 = new THREE.BufferGeometry();
+
+                geometry1.setAttribute('position', new THREE.BufferAttribute(vertices, 3)); // itemSize = 3 because there are 3 values (components) per vertex
+                const material1 = new THREE.MeshBasicMaterial({
+                    color: 'darkgrey',
+                    opacity: 0.5,
+                    transparent: true,
+                    side: THREE.DoubleSide
+                })
+                const mesh1 = new THREE.Mesh(geometry1, material1);
+                scene.add(mesh1);
+
+                const material = new THREE.LineBasicMaterial({
+                    color: 0x0000dd,
+                    linewidth: 5
+                });
+
+                const points = [];
+                points.push( new THREE.Vector3( x1, y1,  omega1*Ueberhoehung) );
+                points.push( new THREE.Vector3( x2, y2, omega2*Ueberhoehung ) );
+
+                const geometry = new THREE.BufferGeometry().setFromPoints( points );
+
+                const line = new THREE.Line( geometry, material );
+                scene.add( line );
+            }
+
+        } else {
+
+        }
+
         const polyShape = new THREE.Shape()
-            .moveTo( 0, 0 )
-            .lineTo( 40, 0 )
-            .lineTo( 40, 30 )
-            .lineTo( 0, 20 )
-            .lineTo( 0, 0 ); // close path
+            .moveTo(0, 0)
+            .lineTo(40, 0)
+            .lineTo(40, 30)
+            .lineTo(0, 20)
+            .lineTo(0, 0); // close path
 
         const geometry_poly = new THREE.ShapeGeometry(polyShape);
-        scene.add(new THREE.Mesh(geometry_poly, new THREE.MeshBasicMaterial({color: 'red', opacity: 0.5, transparent: true , side: THREE.DoubleSide })))
+        scene.add(new THREE.Mesh(geometry_poly, new THREE.MeshBasicMaterial({
+            color: 'red',
+            opacity: 0.5,
+            transparent: true,
+            side: THREE.DoubleSide
+        })))
 
         const geometry1 = new THREE.BufferGeometry();
 // create a simple square shape. We duplicate the top left and bottom right
 // vertices because each vertex needs to appear once per triangle.
         let d = 2.0
-        const vertices = new Float32Array( [
-            -1.0, -1.0,  d,
-            1.0, -1.0,  1.0,
-            1.0,  1.0,  3.0,
+        const vertices = new Float32Array([
+            -1.0, -1.0, d,
+            1.0, -1.0, 1.0,
+            1.0, 1.0, 3.0,
 
-            1.0,  1.0,  1.0,
-            -1.0,  1.0,  1.0,
-            -1.0, -1.0,  1.0
-        ] );
+            1.0, 1.0, 1.0,
+            -1.0, 1.0, 1.0,
+            -1.0, -1.0, 1.0
+        ]);
 
 // itemSize = 3 because there are 3 values (components) per vertex
-        geometry1.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
-        const material1 = new THREE.MeshBasicMaterial( { color: 'darkgrey', opacity: 0.5, transparent: true , side: THREE.DoubleSide }  )
-        const mesh1 = new THREE.Mesh( geometry1, material1 );
+        geometry1.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+        const material1 = new THREE.MeshBasicMaterial({
+            color: 'darkgrey',
+            opacity: 0.5,
+            transparent: true,
+            side: THREE.DoubleSide
+        })
+        const mesh1 = new THREE.Mesh(geometry1, material1);
         scene.add(mesh1);
 
         /*

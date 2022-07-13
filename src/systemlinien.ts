@@ -7,7 +7,7 @@ import {myScreen} from "./index";
 let svg = null;
 let tr = null;
 let label_visible = false;
-export let ymin = -50.0, zmin = -50.0, ymax = 50.0, zmax = 50.0;
+export let ymin = -50.0, zmin = -50.0, ymax = 50.0, zmax = 50.0, slmax = 0.0;
 
 export function systemlinien(node, truss, y_s: number, z_s: number, y_M: number, z_M: number, phi: number) {
 
@@ -56,7 +56,9 @@ export function systemlinien(node, truss, y_s: number, z_s: number, y_M: number,
         if (node[i].z > zmax) zmax = node[i].z;
     }
 
-    console.log("MAX", ymin, ymax, zmin, zmax)
+    slmax = Math.sqrt((ymax - ymin) ** 2 + (zmax - zmin) ** 2)
+
+    console.log("MAX", slmax, ymin, ymax, zmin, zmax)
 
     if (tr === null) {
         tr = new CTrans(ymin, zmin, ymax, zmax)

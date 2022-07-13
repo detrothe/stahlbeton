@@ -59,7 +59,7 @@ class CSS2DRenderer {
 
     constructor( parameters = {} ) {
 
-        console.log("in CSS2DRenderer, parameters.element", parameters.element)
+        //console.log("in CSS2DRenderer, parameters.element", parameters.element)
         const _this = this;
 
         let _width, _height;
@@ -71,7 +71,7 @@ class CSS2DRenderer {
 
         const domElement = parameters.element !== undefined ? parameters.element : document.createElement( 'div' );
 
-        console.log("domElement", domElement, parameters.element)
+        //console.log("domElement", domElement, parameters.element)
         domElement.style.overflow = 'hidden';
 
         this.domElement = domElement;
