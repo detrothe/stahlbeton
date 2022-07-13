@@ -256,6 +256,17 @@ export function draw_elements(y_s: number, z_s: number, y_M: number, z_M: number
         removeObject3D(scene.children[scene.children.length - 1])
     }
 
+    //const ele = document.getElementsByClassName('emotionLabel');
+    //for (let i = 0; i < ele.length; ++i) {
+    //    ele
+    //}
+
+    const elemente = document.querySelectorAll('.emotionLabel');  // entferne html Texte
+
+    elemente.forEach( el => {
+        el.remove();
+    });
+
     if (scene !== null) {
 
         //create a blue LineBasicMaterial
@@ -319,11 +330,12 @@ export function draw_elements(y_s: number, z_s: number, y_M: number, z_M: number
             let nameDiv = document.createElement("div");
             nameDiv.className = "emotionLabel";
             nameDiv.textContent = String(i + 1);
-            console.log("nameDiv", nameDiv)
+            nameDiv.id = "elNo" + i
+            //console.log("nameDiv", nameDiv)
             const xLabel = new CSS2DObject(nameDiv);
             xLabel.position.set(xm, ym, 0);
             xLabel.layers.set(1)
-            console.log("xLabel", xLabel)
+            //console.log("xLabel", xLabel)
             mesh.add(xLabel);
             xLabel.layers.set(1);
 
@@ -343,8 +355,9 @@ export function draw_elements(y_s: number, z_s: number, y_M: number, z_M: number
         const geometry1 = new THREE.BufferGeometry();
 // create a simple square shape. We duplicate the top left and bottom right
 // vertices because each vertex needs to appear once per triangle.
+        let d = 2.0
         const vertices = new Float32Array( [
-            -1.0, -1.0,  1.0,
+            -1.0, -1.0,  d,
             1.0, -1.0,  1.0,
             1.0,  1.0,  3.0,
 
