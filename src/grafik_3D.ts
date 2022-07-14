@@ -56,6 +56,7 @@ export function main_3D() {
 */
 
 export let maxWoelb: number;
+export let maxSigma: number;
 
 //let canvas
 let scene = null
@@ -294,6 +295,8 @@ export function draw_elements(y_s: number, z_s: number, y_M: number, z_M: number
             linewidth: 4
         });
 
+        maxSigma = 0.0
+
         for (let i = 0; i < nelem; i++) {
             //console.log("elem i=", i)
             x1 = -node[truss[i].nod[0]].y
@@ -350,38 +353,114 @@ export function draw_elements(y_s: number, z_s: number, y_M: number, z_M: number
             mesh.add(xLabel);
             xLabel.layers.set(1);
 
+            maxSigma = Math.max(Math.abs(truss[i].sigma_x[0]), Math.abs(truss[i].sigma_x[2]), maxSigma)
         }
 
+        console.log("maxSigma", maxSigma)
+        /*
+                if ((Math.abs(maxWoelb) > 0.0000000000001) && (I_omega > 0.0000000000001)) {
+                    let Ueberhoehung = 0.1 * slmax / maxWoelb // * scf // Skalieren der Wölblinien
+                    console.log("Verwölbung",maxWoelb,Ueberhoehung)
 
-        if ((Math.abs(maxWoelb) > 0.0000000000001) && (I_omega > 0.0000000000001)) {
-            let Ueberhoehung = 0.1 * slmax / maxWoelb // * scf // Skalieren der Wölblinien
-            console.log("Verwölbung",maxWoelb,Ueberhoehung)
+                    let j = 0, nod1:number, nod2: number, omega1:number, omega2:number
+                    for (let i = 0; i < nelem; i++) {
+                        const vertices = new Float32Array(3*6);
+                        nod1 = truss[i].nod[0];
+                        nod2 = truss[i].nod[1];
+                        x1 = -node[nod1].y
+                        y1 = -node[nod1].z
+                        x2 = -node[nod2].y
+                        y2 = -node[nod2].z
+                        omega1 = node[nod1].omega
+                        omega2 = node[nod2].omega
 
-            let j = 0, nod1:number, nod2: number, omega1:number, omega2:number
+                        j = 0
+                        vertices[0+j] = x1 ;vertices[1+j] = y1 ;vertices[2+j] = 0.0 ;
+                        j+=3
+                        vertices[0+j] = x2 ;vertices[1+j] = y2 ;vertices[2+j] = 0.0 ;
+                        j+=3
+                        vertices[0+j] = x2 ;vertices[1+j] = y2 ;vertices[2+j] = omega2*Ueberhoehung ;
+
+                        j+=3
+                        vertices[0+j] = x2 ;vertices[1+j] = y2 ;vertices[2+j] = omega2*Ueberhoehung ;
+                        j+=3
+                        vertices[0+j] = x1 ;vertices[1+j] = y1 ;vertices[2+j] = omega1*Ueberhoehung ;
+                        j+=3
+                        vertices[0+j] = x1 ;vertices[1+j] = y1 ;vertices[2+j] = 0.0 ;
+
+                        const geometry1 = new THREE.BufferGeometry();
+
+                        geometry1.setAttribute('position', new THREE.BufferAttribute(vertices, 3)); // itemSize = 3 because there are 3 values (components) per vertex
+                        const material1 = new THREE.MeshBasicMaterial({
+                            color: 'darkgrey',
+                            opacity: 0.5,
+                            transparent: true,
+                            side: THREE.DoubleSide
+                        })
+                        const mesh1 = new THREE.Mesh(geometry1, material1);
+                        scene.add(mesh1);
+
+                        const material = new THREE.LineBasicMaterial({
+                            color: 0x0000dd,
+                            linewidth: 5
+                        });
+
+                        const points = [];
+                        points.push( new THREE.Vector3( x1, y1,  omega1*Ueberhoehung) );
+                        points.push( new THREE.Vector3( x2, y2, omega2*Ueberhoehung ) );
+
+                        const geometry = new THREE.BufferGeometry().setFromPoints( points );
+
+                        const line = new THREE.Line( geometry, material );
+                        scene.add( line );
+                    }
+
+                } else {
+
+                }
+        */
+        if (maxSigma > 0.0000000000001) {
+
+            let Ueberhoehung = 0.1 * slmax / maxSigma // * scf // Skalieren der Wölblinien
+            console.log("Normalspannung", maxSigma, Ueberhoehung)
+
+            let j = 0, nod1: number, nod2: number, sigma1: number, sigma2: number
             for (let i = 0; i < nelem; i++) {
-                const vertices = new Float32Array(3*6);
+                const vertices = new Float32Array(3 * 6);
                 nod1 = truss[i].nod[0];
                 nod2 = truss[i].nod[1];
                 x1 = -node[nod1].y
                 y1 = -node[nod1].z
                 x2 = -node[nod2].y
                 y2 = -node[nod2].z
-                omega1 = node[nod1].omega
-                omega2 = node[nod2].omega
+                sigma1 = truss[i].sigma_x[0]
+                sigma2 = truss[i].sigma_x[2]
 
                 j = 0
-                vertices[0+j] = x1 ;vertices[1+j] = y1 ;vertices[2+j] = 0.0 ;
-                j+=3
-                vertices[0+j] = x2 ;vertices[1+j] = y2 ;vertices[2+j] = 0.0 ;
-                j+=3
-                vertices[0+j] = x2 ;vertices[1+j] = y2 ;vertices[2+j] = omega2*Ueberhoehung ;
+                vertices[0 + j] = x1;
+                vertices[1 + j] = y1;
+                vertices[2 + j] = 0.0;
+                j += 3
+                vertices[0 + j] = x2;
+                vertices[1 + j] = y2;
+                vertices[2 + j] = 0.0;
+                j += 3
+                vertices[0 + j] = x2;
+                vertices[1 + j] = y2;
+                vertices[2 + j] = sigma2 * Ueberhoehung;
 
-                j+=3
-                vertices[0+j] = x2 ;vertices[1+j] = y2 ;vertices[2+j] = omega2*Ueberhoehung ;
-                j+=3
-                vertices[0+j] = x1 ;vertices[1+j] = y1 ;vertices[2+j] = omega1*Ueberhoehung ;
-                j+=3
-                vertices[0+j] = x1 ;vertices[1+j] = y1 ;vertices[2+j] = 0.0 ;
+                j += 3
+                vertices[0 + j] = x2;
+                vertices[1 + j] = y2;
+                vertices[2 + j] = sigma2 * Ueberhoehung;
+                j += 3
+                vertices[0 + j] = x1;
+                vertices[1 + j] = y1;
+                vertices[2 + j] = sigma1 * Ueberhoehung;
+                j += 3
+                vertices[0 + j] = x1;
+                vertices[1 + j] = y1;
+                vertices[2 + j] = 0.0;
 
                 const geometry1 = new THREE.BufferGeometry();
 
@@ -401,34 +480,34 @@ export function draw_elements(y_s: number, z_s: number, y_M: number, z_M: number
                 });
 
                 const points = [];
-                points.push( new THREE.Vector3( x1, y1,  omega1*Ueberhoehung) );
-                points.push( new THREE.Vector3( x2, y2, omega2*Ueberhoehung ) );
+                points.push(new THREE.Vector3(x1, y1, sigma1 * Ueberhoehung));
+                points.push(new THREE.Vector3(x2, y2, sigma2 * Ueberhoehung));
 
-                const geometry = new THREE.BufferGeometry().setFromPoints( points );
+                const geometry = new THREE.BufferGeometry().setFromPoints(points);
 
-                const line = new THREE.Line( geometry, material );
-                scene.add( line );
+                const line = new THREE.Line(geometry, material);
+                scene.add(line);
             }
-
-        } else {
 
         }
 
-        const polyShape = new THREE.Shape()
-            .moveTo(0, 0)
-            .lineTo(40, 0)
-            .lineTo(40, 30)
-            .lineTo(0, 20)
-            .lineTo(0, 0); // close path
+        /*
+                const polyShape = new THREE.Shape()
+                    .moveTo(0, 0)
+                    .lineTo(40, 0)
+                    .lineTo(40, 30)
+                    .lineTo(0, 20)
+                    .lineTo(0, 0); // close path
 
-        const geometry_poly = new THREE.ShapeGeometry(polyShape);
-        scene.add(new THREE.Mesh(geometry_poly, new THREE.MeshBasicMaterial({
-            color: 'red',
-            opacity: 0.5,
-            transparent: true,
-            side: THREE.DoubleSide
-        })))
-
+                const geometry_poly = new THREE.ShapeGeometry(polyShape);
+                scene.add(new THREE.Mesh(geometry_poly, new THREE.MeshBasicMaterial({
+                    color: 'red',
+                    opacity: 0.5,
+                    transparent: true,
+                    side: THREE.DoubleSide
+                })))
+        */
+        /*
         const geometry1 = new THREE.BufferGeometry();
 // create a simple square shape. We duplicate the top left and bottom right
 // vertices because each vertex needs to appear once per triangle.
@@ -453,7 +532,7 @@ export function draw_elements(y_s: number, z_s: number, y_M: number, z_M: number
         })
         const mesh1 = new THREE.Mesh(geometry1, material1);
         scene.add(mesh1);
-
+*/
         /*
                 const heartShape = new THREE.Shape();
 
