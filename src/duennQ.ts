@@ -75,6 +75,7 @@ class TElement {
     F = [0.0, 0.0]
     cosinus: number
     sinus: number
+    alpha: number
     rt: number
     Flaeche: number
     Iyy: number
@@ -389,7 +390,9 @@ export function duennQ() {
         dy = y2 - y1;
         dz = z2 - z1;
         truss[i].sl = Math.sqrt(dy * dy + dz * dz);      // Stablänge
-        console.log("sl=", i, truss[i].sl)
+
+        truss[i].alpha = Math.atan2(dz,dy) //*180.0/Math.PI
+        console.log("sl=", i, truss[i].sl, truss[i].alpha)
 
         truss[i].lm[0] = node[nod1].Lx;
         truss[i].lm[1] = node[nod2].Lx;

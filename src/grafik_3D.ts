@@ -7,6 +7,7 @@ import {nnodes, nelem, node, truss, I_omega} from "./duennQ"
 import {ymin, ymax, zmin, zmax, slmax} from "./systemlinien";
 import {myScreen} from "./index.js";
 import {CSS2DObject, CSS2DRenderer} from "./renderers/CSS2DRenderer.js"
+import {max} from "d3";
 
 /*
 export function main_3D() {
@@ -258,6 +259,7 @@ export function add_element() {
 export function draw_elements(y_s: number, z_s: number, y_M: number, z_M: number, phi: number) {
 //--------------------------------------------------------------------------------------------------------
 
+    let i: number, j: number
     let y1: number, y2: number, x1: number, x2: number, xm: number, ym: number
 
     while (scene.children.length > 2) {  // Licht soll bleiben
@@ -491,6 +493,76 @@ export function draw_elements(y_s: number, z_s: number, y_M: number, z_M: number
 
         }
 
+        {
+            let tau = Array(3)
+
+            let xi: number, tau_i: number, tau_j: number, sl: number, nod1: number
+
+            const teilung = 5
+            const n = (teilung + 1) * 2
+            //const stress_poly = Array.from(Array(teilung + 4), () => new Array(2).fill(0.0));
+            //const stress_area = Array.from(Array(n + 1), () => new Array(2).fill(0.0));
+            let maxTau = 0.0
+
+            for (i = 0; i < nelem; i++) {
+                for (j = 0; j < 3; j++) {
+                    tau_j = truss[i].tau_p1[j] + truss[i].tau_s[j]
+                    if (Math.abs(tau_j) > maxTau) maxTau = Math.abs(tau_j)
+                }
+            }
+
+            if (maxTau > 0.0) {
+
+                let Ueberhoehung = 0.3 * slmax / maxTau // * scf //
+                console.log("maxTau", maxTau, Ueberhoehung)
+
+                let dx: number, sl: number
+
+                for (i = 0; i < nelem; i++) {
+                    sl = truss[i].sl
+                    dx = sl / teilung
+                    for (j = 0; j < 3; j++) {
+                        tau[j] = truss[i].tau_p1[j] + truss[i].tau_s[j]
+                    }
+                    const polyShape = new THREE.Shape()
+                    polyShape.moveTo(0.0, 0.0)
+                    for (let istelle = 0; istelle <= teilung; istelle++) {
+                        xi = istelle * dx
+                        tau_i = (sl ** 2 - 3 * sl * xi + 2 * xi ** 2) * tau[0] + 4 * xi * (sl - xi) * tau[1]
+                        tau_i = (tau_i + xi * (2 * xi - sl) * tau[2]) / sl / sl * Ueberhoehung
+
+                        polyShape.lineTo(-xi, tau_i)
+
+                        console.log("tau_i", i, istelle, xi, tau_i)
+                    }
+                    polyShape.lineTo(-sl, 0.0)
+                    polyShape.lineTo(0.0, 0.0)
+
+                    const geometry_poly = new THREE.ShapeGeometry(polyShape);
+                    let flaeche = new THREE.Mesh(geometry_poly, new THREE.MeshBasicMaterial({
+                        color: 'red',
+                        opacity: 0.5,
+                        transparent: true,
+                        side: THREE.DoubleSide
+                    }))
+                    //flaeche.rotateY(-1.570795)
+                    nod1 = truss[i].nod[0];
+                    flaeche.translateX(-node[nod1].y)
+                    flaeche.translateY(-node[nod1].z)
+                    flaeche.rotateZ(truss[i].alpha)
+                    flaeche.rotateX(1.570795)
+                    scene.add(flaeche)
+                    /*
+                    scene.add(new THREE.Mesh(geometry_poly, new THREE.MeshBasicMaterial({
+                    color: 'red',
+                    opacity: 0.5,
+                    transparent: true,
+                    side: THREE.DoubleSide
+                    })))
+                    */
+                }
+            }
+        }
         /*
                 const polyShape = new THREE.Shape()
                     .moveTo(0, 0)
