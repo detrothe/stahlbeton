@@ -122,6 +122,17 @@
                 <table class="table_eng">
                     <tbody>
                     <tr>
+                        <td colspan="4">
+                            <input type="checkbox" id="material_equal" name="material_equal"
+                                   value="material" >
+                            <label for="material_equal"> alle Elemente haben gleiches Material</label>
+                        </td>
+                        <td></td>
+
+                    <tr>
+                        <td class="zelle0">&nbsp;</td>
+                    </tr>
+                    <tr>
                         <td class="zelle0">E-Modul=</td>
                         <td><input type="text" id="EMod_ref" name="EMod_ref" value="21000" class="input_kdtab"
                                    pattern="[0-9.,eE+-]*"></td>
@@ -499,7 +510,7 @@
 
     </div>
 
-    <div id="my-webgl"   class="unten_webgl" style="background-color:#bbb;">
+    <div id="my-webgl" class="unten_webgl" style="background-color:#bbb;">
         <canvas id="c3"></canvas>
         <button id="button_label_webgl">Label</button>
         <div id="label_x_achse">x</div>
