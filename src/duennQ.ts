@@ -46,6 +46,19 @@ export function duennQuer() {
 // @ts-ignore
 window.duennQuer = duennQuer;   // jetzt auch in html sichtbar
 
+export function setMaterialEqual() {
+    const input = document.getElementById('material_equal') as HTMLInputElement | null;
+    console.log("in setMaterialEqual", input.checked);
+    if ( input.checked ) {
+        document.getElementById("EMod_ref").hidden=true;
+        document.getElementById("mue_ref").hidden=true;
+    } else {
+        document.getElementById("EMod_ref").hidden=false;
+        document.getElementById("mue_ref").hidden=false;
+    }
+}
+// @ts-ignore
+window.setMaterialEqual = setMaterialEqual;   // jetzt auch in html sichtbar
 
 export let node = []
 export let truss = []
