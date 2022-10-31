@@ -579,3 +579,13 @@ td.selected {
     font-size: 1rem;
     z-index: 120;
 }
+
+.unsichtbar {
+    color: #8b0000;
+    background-color: rgb(110, 110, 110);
+}
+
+.sichtbar {
+    color: #00bb00;
+    background-color: #D8D8D8;
+}

@@ -35,6 +35,7 @@ btn3.addEventListener('click', clear_Tabelle);
 
 document.getElementById('button_label_svg').addEventListener('click', label_svg, false);
 
+document.getElementById("material_equal").addEventListener('change', setMaterialEqual);
 //------------------------------------------------------------------------------------------------
 
 export function duennQuer() {
@@ -46,19 +47,51 @@ export function duennQuer() {
 // @ts-ignore
 window.duennQuer = duennQuer;   // jetzt auch in html sichtbar
 
-export function setMaterialEqual() {
+function setMaterialEqual(ev) {
     const input = document.getElementById('material_equal') as HTMLInputElement | null;
     console.log("in setMaterialEqual", input.checked);
-    if ( input.checked ) {
-        document.getElementById("EMod_ref").hidden=true;
+
+
+    const tabelle = document.getElementById("elemTable") as HTMLTableElement | null;;
+    //let nSpalten = tabelle.rows[0].cells.length;
+
+    if (ev.target.checked) {
+        console.log("editable",document.getElementById("EMod_ref").isContentEditable);
+        document.getElementById("EMod_ref").ariaReadOnly = 'true'; //  .contentEditable = 'false'; //.hidden=true;
         document.getElementById("mue_ref").hidden=true;
+        console.log("Anzahl Zeilen",tabelle.rows.length);
+        for (let i = 1; i < tabelle.rows.length; i++) {
+            for (let j = 1; j < 3; j++) {
+                tabelle.rows[i].cells[j].innerText = 'NO';
+                tabelle.rows[i].cells[j].contentEditable = 'false';
+                tabelle.rows[i].cells[j].classList.add('unsichtbar');
+            }
+        }
     } else {
+        console.log("editable",document.getElementById("EMod_ref").isContentEditable);
         document.getElementById("EMod_ref").hidden=false;
         document.getElementById("mue_ref").hidden=false;
+        for (let i = 1; i < tabelle.rows.length; i++) {
+            for (let j = 1; j < 3; j++) {
+                tabelle.rows[i].cells[j].innerText = 'edit';
+                tabelle.rows[i].cells[j].contentEditable = 'true';
+                tabelle.rows[i].cells[j].classList.remove('symmetry');
+            }
+        }
     }
+/*
+    if ( input.checked ) {
+        document.getElementById("EMod_ref").contentEditable = 'false'; //.hidden=true;
+        document.getElementById("mue_ref").hidden=true;
+    } else {
+        document.getElementById("EMod_ref").contentEditable = 'true'; //.hidden=false;
+        document.getElementById("mue_ref").hidden=false;
+    }
+
+ */
 }
 // @ts-ignore
-window.setMaterialEqual = setMaterialEqual;   // jetzt auch in html sichtbar
+//window.setMaterialEqual = setMaterialEqual;   // jetzt auch in html sichtbar
 
 export let node = []
 export let truss = []
