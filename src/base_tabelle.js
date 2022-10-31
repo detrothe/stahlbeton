@@ -421,8 +421,10 @@ export function KEYDOWN(ev) {
 
         console.log("idTable", str);
         const elemNeu = document.getElementById(str);
-        elemNeu.classList.add('highlight');
-        elemNeu.innerText = "";
+        if ( elemNeu.contentEditable === 'true') {
+            elemNeu.classList.add('highlight');
+            elemNeu.innerText = "";
+        }
         elemNeu.focus();
         const evt = new Event("mousedown", {"bubbles": true, "cancelable": false});
         evt.button = 0;     // linke Maustaste

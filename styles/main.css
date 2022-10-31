@@ -26,6 +26,12 @@ body {
 
 }
 
+a:link {
+    /*color: black;
+    background-color: transparent; */
+    text-decoration: none;
+}
+
 /* Style the header */
 .header {
     grid-area: header;
@@ -197,6 +203,9 @@ hr {
 .topnav .info {
     display: none;
 }
+
+
+
 
 #tangens {
     display: none;
@@ -376,6 +385,11 @@ input:valid {
 #elemTable td.highlight {
     background-color: orange;
     color: darkslateblue;
+    white-space: nowrap;
+}
+#elemTable td.unsichtbar {
+    background-color: rgb(150, 180, 180);
+    color: rgb(150, 180, 180);
     white-space: nowrap;
 }
 
@@ -579,9 +593,9 @@ td.selected {
     font-size: 1rem;
     z-index: 120;
 }
-
+/*
 .unsichtbar {
-    color: #8b0000;
+    color: rgb(250,250,250);
     background-color: rgb(110, 110, 110);
 }
 
@@ -589,3 +603,5 @@ td.selected {
     color: #00bb00;
     background-color: #D8D8D8;
 }
+
+ */
