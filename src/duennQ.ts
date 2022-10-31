@@ -57,7 +57,7 @@ function setMaterialEqual(ev) {
 
     if (ev.target.checked) {
         console.log("editable",document.getElementById("EMod_ref").isContentEditable);
-        document.getElementById("EMod_ref").ariaReadOnly = 'true'; //  .contentEditable = 'false'; //.hidden=true;
+        document.getElementById("EMod_ref").hidden=true;
         document.getElementById("mue_ref").hidden=true;
         console.log("Anzahl Zeilen",tabelle.rows.length);
         for (let i = 1; i < tabelle.rows.length; i++) {
@@ -75,7 +75,7 @@ function setMaterialEqual(ev) {
             for (let j = 1; j < 3; j++) {
                 tabelle.rows[i].cells[j].innerText = 'edit';
                 tabelle.rows[i].cells[j].contentEditable = 'true';
-                tabelle.rows[i].cells[j].classList.remove('symmetry');
+                tabelle.rows[i].cells[j].classList.remove('unsichtbar');
             }
         }
     }
