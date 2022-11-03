@@ -293,6 +293,7 @@ export function MOUSEDOWN(ev) {
         console.log("selekt", tableId, tabelle.rows[row].cells[col].selekt);
 
         if (tabelle.rows[row].cells[col].contentEditable === 'false') {
+
             const str = tableId + '-' + row + '-' + (col + 1);
             //console.log("contentEditable === false", row, col, str);
             selectedCellPoly.row = row;
@@ -503,6 +504,8 @@ export function resize_Tabelle(idTable, nRowNew, nColNew) {
 
     if (nRowNew > nZeilen) {
 
+        const material_equal = document.getElementById('material_equal') as HTMLInputElement | null;
+        console.log("in setMaterialEqual", material_equal.checked);
         for (let i = nZeilen + 1; i <= nRowNew; i++) {
             //selectedCellPoly.selColY.push(false);
             //selectedCellPoly.selColZ.push(false);
@@ -535,7 +538,12 @@ export function resize_Tabelle(idTable, nRowNew, nColNew) {
 
                 } else if (j <= nRowNew) {
                     //newCell.style.backgroundColor = "#FFFFFF";
-                    newCell.contentEditable = 'true';
+                    if ( material_equal.checked && j<3) {
+                        newCell.contentEditable = 'false';
+                        newCell.classList.add('unsichtbar');
+                    } else {
+                        newCell.contentEditable = 'true';
+                    }
                     newCell.addEventListener("mousemove", MOUSEMOVE);
                     newCell.addEventListener("mousedown", MOUSEDOWN);
                     newCell.addEventListener("keydown", KEYDOWN);
